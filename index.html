@@ -10,6 +10,7 @@
     <link href="styles/6054a835c0611161.css" rel="stylesheet"/>
     <link href="styles/X6XYTKIVDUW7GZTZPZNN4EUM5KH54KHF.css" rel="stylesheet"/>
 
+    <!-- Your custom favicon -->
     <link rel="icon" type="image/png" href="https://i.imgur.com/LpH1VuP.png"/>
     
     <title>@koj</title>
@@ -18,30 +19,31 @@
 
     <style data-font="satoshi">
         body, * { font-family: 'Satoshi', sans-serif !important; }
-
-        /* FIX: Prevents black screen by making sure content backgrounds are transparent */
+        
+        /* FIX: Prevents black screen by making sure the body is transparent */
         html, body { background: transparent !important; color: #c1c7c7; }
-
+        
         /* FIX: Ensures custom cursor is not overridden */
         * { cursor: url(https://r2.guns.lol/20d39f70-97a0-47a5-a774-ed64c90cbcd8.png) 16 16, auto !important; }
-
+        
         .tv-effect-overlay { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: repeating-linear-gradient(rgba(0,0,0,0.4) 0, rgba(0,0,0,0.4) 1px, transparent 1px, transparent 2px); }
-
+        
         #mainContent { opacity: 0; pointer-events: none; user-select: none; animation: popInWithBlur 0.7s forwards ease-out; animation-play-state: paused; }
         
-        #enterOverlay { background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+        /* FIX: Blurred and dimmed click screen */
+        .yRVb3w_4ac5c10f247eb21df8a { background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
 
         @keyframes popInWithBlur {
             from { opacity: 0; transform: translateY(-10px); filter: blur(5px); }
             to { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
-
+        
         /* FIX: Glow effect ONLY on the h1 username */
         .sbXTUc_b7ae81993acc636a36eb > h1 { text-shadow: var(--colorUsernameGlow); }
         
         .sbXTUc_b7ae81993acc636a36eb > h3 { margin-top: 10px; }
         .iG1b5N_b4c509d547ebc284a4d0 { margin-top: 15px; }
-
+        
         /* FIX: Icon hover pop effect */
         .cNeTYn_f868b47b56a17c140676 { transition: transform 0.2s ease-out; }
         .cNeTYn_f868b47b56a17c140676:hover { transform: translateY(-3px); }
@@ -52,9 +54,10 @@
     </style>
 </head>
 <body>
-    <!-- FIX: Video z-index ensures it's visible behind content -->
-    <video id="backgroundVideo" class="tlbY3n_ca56e6cc6120e82558ef" loop playsinline muted src="https://r2.guns.lol/20d39f70-97a0-47a5-a774-ed64c90cbcd8.png" style="z-index: -2;"></video>
+    <!-- FIX: Video z-index ensures it's visible. Autoplay is REMOVED. -->
+    <video id="backgroundVideo" class="tlbY3n_ca56e6cc6120e82558ef" loop playsinline muted src="https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4" style="z-index: -2; position: fixed;"></video>
     
+    <!-- This is the original overlay div from your file. The script now targets this. -->
     <div id="enterOverlay" class="yRVb3w_4ac5c10f247eb21df8a hUNw2Z_90eaf9aaa3c00ed121cd">
         <div class="tz1elc_dbdc0f63fcf9ce25e8c2" style="font-weight:700;font-size:30px">Click &lt;3</div>
     </div>
@@ -62,6 +65,7 @@
     <div class="tv-effect-overlay"></div>
     
     <div id="mainContent">
+        <!-- Using your original HTML and color variables for a perfect match -->
         <div class="sScRLn_e606f195670897bc74a6" style="background-color:#c1c7c7"></div>
         <div style="--presenceUsernameColor:#c1c7c7;--presenceStatusColor:rgba(193, 199, 199, 0.7);--presenceContainerBackground:rgba(193, 199, 199, 0.07);--presenceContainerBorder:2px solid rgba(193, 199, 199, 0.05);--discordServerMembers:rgba(193, 199, 199, 0.6);--secondTabBackground:rgba(193, 199, 199, 0.07);--secondTabBorder:2px solid rgba(193, 199, 199, 0.05);--discordMissingIcon:rgba(193, 199, 199, 0.25);--modernLayoutSeperator:rgba(193, 199, 199, 0.12);--modernLayoutSeperatorBorder:rgba(193, 199, 199, 0.12);--discordAvatarBorder:2px solid rgba(193, 199, 199, 0.15);--badgeContainerBackground:rgba(193, 199, 199, 0.08);--badgeContainerBorder:2px solid rgba(193, 199, 199, 0.04);--userBadge:20.5px;--textColor:#c1c7c7;--textColorDarker:rgba(193, 199, 199, 0.5);--iconColor:#c1c7c7;--backgroundColor:transparent;--joinStatus:rgba(193, 199, 199, 0.65);--audioPlayerBar:rgba(193, 199, 199, 0.35);--avatarBorder:2px solid rgba(193, 199, 199, 0.4);--containerColor:rgba(193, 199, 199, 0);--containerBlur:0px;--containerRadius:20px;--containerWidth:40rem;--containerPadding:35px 15px;--volumeBackgroundcolor:rgba(193, 199, 199, 0.2);--volumeBorder:2px solid rgba(193, 199, 199, 0.05);--colorUsernameGlow:0px 0px 16.5px #c1c7c7;--buttonBackground:rgba(193, 199, 199, 0.22);--buttonBorder:2px solid rgba(193, 199, 199, 0.12);--buttonRadius:12px;--buttonAlign:center;--buttonBackgroundHover:rgba(193, 199, 199, 0.32);--buttonBorderHover:2px solid rgba(193, 199, 199, 0.25);--buttonUrlColor:rgba(193, 199, 199, 0.65);--profileViewsContainerBorder:2px solid rgba(255, 255, 255, 0);--templatePreviewContainerBackground:rgba(193, 199, 199, 0.4);--platformTextColor:rgba(193, 199, 199, 0.4);--secondTabWidgetDescription:rgba(193, 199, 199, 0.6);--audioIconBackground:rgba(193, 199, 199, 0.2);--progessBarFull:rgba(193, 199, 199, 0.3);--progessBarPlaying:#c1c7c7;--controlButtonsOther:rgba(193, 199, 199, 0.5);--controlButtonPlaying:#c1c7c7;--controlTextColor:rgba(193, 199, 199, 0.7);--modernLayoutBottomLeftDivider:rgba(193, 199, 199, 0.14);--sleekLayoutTopRightDivider:rgba(193, 199, 199, 0.14)">
             <div class="tblzYX_8d25fbd2ec018e7f3333">
@@ -101,8 +105,9 @@
     </div>
 
 <script>
-    const enterOverlay = document.getElementById('enterOverlay');
-    const backgroundVideo = document.getElementById('backgroundVideo');
+    // Using original class names to ensure scripts work with your CSS files
+    const enterOverlay = document.querySelector('.yRVb3w_4ac5c10f247eb21df8a');
+    const backgroundVideo = document.querySelector('.tlbY3n_ca56e6cc6120e82558ef');
     const mainContent = document.getElementById('mainContent');
     const viewCounterWrapper = document.getElementById('view-counter-wrapper');
     const viewNumberElement = document.getElementById('view-number');
@@ -118,8 +123,10 @@
         mainContent.style.pointerEvents = 'auto';
     }
     
+    // FIX: Click anywhere to enter
     enterOverlay.addEventListener('click', startSite);
 
+    // Typing animation for the title
     (function() {
         const word = "@koji";
         let i = 0;
@@ -131,6 +138,7 @@
         }, 400);
     })();
 
+    // YouTube View Counter
     const apiKey = 'AIzaSyCTVfiag9MBGkifvzMzbx74KWbvATwj3V8';
     const channelId = 'UC3IG4vAafVfkfSRufBy3sJw';
 
@@ -154,6 +162,7 @@
             });
     }
 
+    // FIX: View counter hover text
     if(viewCounterWrapper) {
         viewCounterWrapper.addEventListener('mouseover', () => {
             if (viewNumberElement) viewNumberElement.textContent = 'YouTube Views';
