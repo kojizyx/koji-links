@@ -44,6 +44,21 @@
             z-index: -1;
         }
 
+        /* --- THIS IS THE NEW CSS FOR THE TV EFFECT --- */
+        .tv-effect-overlay {
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                rgba(0, 0, 0, 0.3) 0,
+                rgba(0, 0, 0, 0.3) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            z-index: 0; /* Places it on top of the video but behind everything else */
+            pointer-events: none; /* Makes the overlay unclickable */
+        }
+        /* ------------------------------------------- */
+
         .enter-overlay {
             position: fixed;
             inset: 0;
@@ -67,15 +82,13 @@
             transition: opacity 0.5s ease-in-out;
         }
 
-        /* --- THIS IS THE ONLY PART THAT HAS CHANGED --- */
         .header-container {
             position: fixed;
             top: 50%;
-            left: 15vw; /* Pushes the text away from the left edge */
-            transform: translateY(-50%); /* This vertically centers the text block */
+            left: 15vw;
+            transform: translateY(-50%);
             z-index: 10;
         }
-        /* ------------------------------------------- */
 
         .header-container h1 {
             font-weight: 600;
@@ -124,8 +137,11 @@
     </style>
 </head>
 <body>
-    <!-- Background video (initially muted and not playing) -->
+    <!-- Background video -->
     <video id="backgroundVideo" class="background-video" loop playsinline muted src="https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4"></video>
+
+    <!-- TV Effect Overlay -->
+    <div class="tv-effect-overlay"></div>
 
     <!-- Enter Overlay -->
     <div id="enterOverlay" class="enter-overlay">Click &lt;3</div>
