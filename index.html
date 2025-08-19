@@ -1,169 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>koji</title>
-<link rel="icon" href="https://i.imgur.com/LpH1VuP.png">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
 
-<style>
-  :root {
-    --containerBackground: rgba(0,0,0,0.5);
-    --containerBorder: 1px solid rgba(255,255,255,0.3);
-    --containerRadius: 8px;
-    --containerPadding: 8px 12px;
-  }
+    <!-- Your custom favicon -->
+    <link rel="icon" type="image/png" href="https://i.imgur.com/LpH1VuP.png"/>
+    <link href="https://assets.guns.lol/favicon/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
 
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #fff;
-    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><circle cx="12" cy="12" r="6" fill="black"/></svg>') 12 12, auto;
-    overflow: hidden;
-  }
+    <title>@koj</title>
+    <meta content="i make videos when i feel like it" name="description"/>
+    <meta content="@koji" name="author"/>
+    <meta content="@koji" property="og:title"/>
+    <meta content="i make videos when i feel like it" property="og:description"/>
 
-  /* Click overlay */
-  .enter-overlay {
-    position: fixed;
-    inset: 0;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 999;
-  }
+    <style>
+        body, * {
+            font-family: 'Satoshi', sans-serif !important;
+        }
 
-  /* Header text pop-in */
-  .header-text {
-    font-weight: 700;
-    font-size: 36px;
-    text-align: center;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: popIn 0.6s forwards;
-    animation-delay: 0.2s;
-  }
+        body, html {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #c1c7c7;
+            overflow: hidden;
+        }
 
-  @keyframes popIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+        * {
+            cursor: url(https://r2.guns.lol/20d39f70-97a0-47a5-a774-ed64c90cbcd8.png) 16 16, auto !important;
+        }
 
-  /* Icons container */
-  .icons {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    gap: 12px;
-  }
+        ::-moz-selection { background: #c1c7c7; color: #000; }
+        ::selection { background: #c1c7c7; color: #000; }
 
-  .icons a svg {
-    width: 32px;
-    height: 32px;
-    fill: #000;
-  }
+        .background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
 
-  /* View counter */
-  .view-counter {
-    position: fixed;
-    bottom: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--containerBackground);
-    border: var(--containerBorder);
-    border-radius: var(--containerRadius);
-    padding: var(--containerPadding);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: 550;
-    font-size: 14px;
-  }
+        .enter-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 30px;
+            z-index: 100;
+            opacity: 0;
+            animation: fadeIn 0.8s forwards;
+        }
 
-  video#bg-video {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: -1;
-  }
-</style>
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .main-content {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .header-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+
+        .header-container h1 {
+            font-weight: 600;
+            font-size: 39.5px;
+            margin: 0;
+        }
+
+        .header-container h3 {
+            font-weight: 570;
+            font-size: 19px;
+            margin-top: 2px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .social-links a {
+            color: #c1c7c7;
+            text-decoration: none;
+        }
+
+        .social-links svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        #view-counter-container {
+            position: fixed;
+            bottom: 50%;
+            left: 50%;
+            transform: translate(-50%, 50%);
+            background: rgba(193,199,199,0.07);
+            border: 2px solid rgba(193,199,199,0.15);
+            border-radius: 12px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 550;
+            font-size: 16px;
+            z-index: 10;
+        }
+    </style>
 </head>
 <body>
+    <!-- Background video (initially muted and not playing) -->
+    <video id="backgroundVideo" class="background-video" loop playsinline muted src="https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4"></video>
 
-<!-- Background video -->
-<video id="bg-video" muted>
-  <source src="your-video.mp4" type="video/mp4">
-</video>
+    <!-- Enter Overlay -->
+    <div id="enterOverlay" class="enter-overlay">Click &lt;3</div>
 
-<!-- Click overlay -->
-<div class="enter-overlay">
-  <h3>Click to enter</h3>
-</div>
+    <!-- Main Content (starts hidden) -->
+    <div id="mainContent" class="main-content">
+        <div class="header-container">
+            <h1>koji</h1>
+            <h3>i make videos when i feel like it</h3>
+            <div class="social-links">
+                <a href="https://youtube.com/@Koji_z" target="_blank">
+                    <svg height="1em" viewBox="1.99 5 20.01 14.01" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21.593 7.203a2.506 2.506 0 0 0-1.762-1.766C18.265 5.007 12 5 12 5s-6.264-.007-7.831.404a2.56 2.56 0 0 0-1.766 1.778c-.413 1.566-.417 4.814-.417 4.814s-.004 3.264.406 4.814c.23.857.905 1.534 1.763 1.765c1.582.43 7.83.437 7.83.437s6.265.007 7.831-.403a2.515 2.515 0 0 0 1.767-1.763c.414-1.565.417-4.812.417-4.812s.02-3.265-.407-4.831zM9.996 15.005l.005-6l5.207 3.005l-5.212 2.995z" fill="currentColor"/></svg>
+                </a>
+                <a href="https://discord.com/invite/7Z2zK9u2Vb" target="_blank">
+                    <svg height="1em" viewBox="1.96 4.26 20.03 15.53" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M14.82 4.26a10.14 10.14 0 0 0-.53 1.1a14.66 14.66 0 0 0-4.58 0a10.14 10.14 0 0 0-.53-1.1a16 16 0 0 0-4.13 1.3a17.33 17.33 0 0 0-3 11.59a16.6 16.6 0 0 0 5.07 2.59A12.89 12.89 0 0 0 8.23 18a9.65 9.65 0 0 1-1.71-.83a3.39 3.39 0 0 0 .42-.33a11.66 11.66 0 0 0 10.12 0q.21.18.42.33a10.84 10.84 0 0 1-1.71.84a12.41 12.41 0 0 0 1.08 1.78a16.44 16.44 0 0 0 5.06-2.59a17.22 17.22 0 0 0-3-11.59a16.09 16.09 0 0 0-4.09-1.35zM8.68 14.81a1.94 1.94 0 0 1-1.8-2a1.93 1.93 0 0 1 1.8-2a1.93 1.93 0 0 1 1.8 2a1.93 1.93 0 0 1-1.8 2zm6.64 0a1.94 1.94 0 0 1-1.8-2a1.93 1.93 0 0 1 1.8-2a1.92 1.92 0 0 1 1.8 2a1.92 1.92 0 0 1-1.8 2z" fill="currentColor"/></svg>
+                </a>
+            </div>
+        </div>
 
-<!-- Header -->
-<div class="header-text">i make videos when i feel like it</div>
-
-<!-- Icons -->
-<div class="icons">
-  <a href="https://youtube.com/@Koji_z" target="_blank">
-    <svg viewBox="1.99 5 20.01 14.01"><path d="M21.593 7.203a2.506 2.506 0 0 0-1.762-1.766C18.265 5.007 12 5 12 5s-6.264-.007-7.831.404a2.56 2.56 0 0 0-1.766 1.778c-.413 1.566-.417 4.814-.417 4.814s-.004 3.264.406 4.814c.23.857.905 1.534 1.763 1.765c1.582.43 7.83.437 7.83.437s6.265.007 7.831-.403a2.515 2.515 0 0 0 1.767-1.763c.414-1.565.417-4.812.417-4.812s.02-3.265-.407-4.831zM9.996 15.005l.005-6l5.207 3.005l-5.212 2.995z"/></svg>
-  </a>
-  <a href="https://discord.com/invite/7Z2zK9u2Vb" target="_blank">
-    <svg viewBox="1.96 4.26 20.03 15.53"><path d="M14.82 4.26a10.14 10.14 0 0 0-.53 1.1a14.66 14.66 0 0 0-4.58 0a10.14 10.14 0 0 0-.53-1.1a16 16 0 0 0-4.13 1.3a17.33 17.33 0 0 0-3 11.59a16.6 16.6 0 0 0 5.07 2.59A12.89 12.89 0 0 0 8.23 18a9.65 9.65 0 0 1-1.71-.83a3.39 3.39 0 0 0 .42-.33a11.66 11.66 0 0 0 10.12 0q.21.18.42.33a10.84 10.84 0 0 1-1.71.84a12.41 12.41 0 0 0 1.08 1.78a16.44 16.44 0 0 0 5.06-2.59a17.22 17.22 0 0 0-3-11.59a16.09 16.09 0 0 0-4.09-1.35zM8.68 14.81a1.94 1.94 0 0 1-1.8-2a1.93 1.93 0 0 1 1.8-2a1.93 1.93 0 0 1 1.8 2a1.93 1.93 0 0 1-1.8 2zm6.64 0a1.94 1.94 0 0 1-1.8-2a1.93 1.93 0 0 1 1.8-2a1.92 1.92 0 0 1 1.8 2a1.92 1.92 0 0 1-1.8 2z"/></svg>
-  </a>
-</div>
-
-<!-- View counter -->
-<div class="view-counter">
-  <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
-  <span id="view-number">0</span>
-</div>
+        <div id="view-counter-container">
+            <svg height="1em" viewBox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5" fill="currentColor"></path></svg>
+            <span id="view-number">0</span>
+        </div>
+    </div>
 
 <script>
-  // Click overlay logic
-  const overlay = document.querySelector('.enter-overlay');
-  const video = document.getElementById('bg-video');
+    const enterOverlay = document.getElementById('enterOverlay');
+    const backgroundVideo = document.getElementById('backgroundVideo');
+    const mainContent = document.getElementById('mainContent');
 
-  overlay.addEventListener('click', () => {
-    overlay.style.display = 'none'; // instant
-    if (video) {
-      video.muted = false;
-      video.play().catch(err => console.error(err));
+    function startSite() {
+        // Disappear instantly
+        enterOverlay.style.display = 'none';
+
+        // Play video and unmute
+        if (backgroundVideo) {
+            backgroundVideo.muted = false;
+            backgroundVideo.play().catch(error => {
+                console.error("Video failed to play:", error);
+            });
+        }
+        
+        // Fade in the main content
+        mainContent.style.opacity = '1';
     }
-  });
 
-  // Typing title animation
-  (function() {
-    const word = "koji";
-    let i = 0, forward = true;
-    setInterval(() => {
-      if (forward) { i++; if(i===word.length) forward=false; }
-      else { i--; if(i===0) forward=true; }
-      document.title = word.substring(0,i);
-    }, 150);
-  })();
+    enterOverlay.addEventListener('click', startSite);
 
-  // YouTube view counter
-  const apiKey = 'AIzaSyCTVfiag9MBGkifvzMzbx74KWbvATwj3V8';
-  const channelId = 'UC3IG4vAafVfkfSRufBy3sJw';
-  const viewNumber = document.getElementById('view-number');
+    // Typing animation for the title
+    (function() {
+        const word = "koji";
+        let i = 0;
+        let forward = true;
+        setInterval(() => {
+            if (forward) {
+                i++;
+                if (i === word.length) forward = false;
+            } else {
+                i--;
+                if (i === 1) forward = true;
+            }
+            document.title = word.substring(0, i);
+        }, 150); // Fast typing speed
+    })();
 
-  if(viewNumber){
-    fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelId}&key=${apiKey}`)
-    .then(res => res.json())
-    .then(data => {
-      if(data.items && data.items.length>0){
-        viewNumber.textContent = data.items[0].statistics.viewCount.toLocaleString();
-      }
-    })
-    .catch(err => console.error('Error fetching views:', err));
-  }
+    // YouTube View Counter
+    const apiKey = 'AIzaSyCTVfiag9MBGkifvzMzbx74KWbvATwj3V8';
+    const channelId = 'UC3IG4vAafVfkfSRufBy3sJw';
+    const viewNumberElement = document.getElementById('view-number');
+
+    if (viewNumberElement) {
+        fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelId}&key=${apiKey}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.items && data.items.length > 0) {
+                    const views = data.items[0].statistics.viewCount;
+                    viewNumberElement.textContent = parseInt(views).toLocaleString();
+                } else {
+                    viewNumberElement.textContent = 'Error';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching YouTube data:', error);
+                viewNumberElement.textContent = 'N/A';
+            });
+    }
 </script>
 
 </body>
