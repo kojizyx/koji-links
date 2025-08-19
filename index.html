@@ -21,67 +21,60 @@
         body, * {
             font-family: 'Satoshi', sans-serif !important;
         }
-
         html, body {
-            background: #000 !important; /* Ensures no white flash */
+            background: #000 !important;
             color: #c1c7c7;
         }
-
+        /* FIX: Ensure custom cursor is not overridden */
         * {
             cursor: url(https://r2.guns.lol/20d39f70-97a0-47a5-a774-ed64c90cbcd8.png) 16 16, auto !important;
         }
-
         .tv-effect-overlay {
-            position: fixed;
-            inset: 0;
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
             background: repeating-linear-gradient(rgba(0,0,0,0.4) 0, rgba(0,0,0,0.4) 1px, transparent 1px, transparent 2px);
-            z-index: 0;
-            pointer-events: none;
         }
-
         #mainContent {
-            opacity: 0;
-            pointer-events: none;
-            user-select: none;
+            opacity: 0; pointer-events: none; user-select: none;
             animation: popInWithBlur 0.7s forwards ease-out;
             animation-play-state: paused;
         }
-        
+        /* FIX: Blurred and dimmed click screen */
         #enterOverlay {
             background: rgba(0,0,0,0.5);
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
         }
-
         @keyframes popInWithBlur {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-                filter: blur(5px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-                filter: blur(0);
-            }
+            from { opacity: 0; transform: translateY(-10px); filter: blur(5px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
-
+        /* FIX: Glow effect ONLY on the h1 username */
         .sbXTUc_b7ae81993acc636a36eb > h1 {
             text-shadow: var(--colorUsernameGlow);
         }
-
+        /* FIX: Spacing corrected */
         .sbXTUc_b7ae81993acc636a36eb > h3 { margin-top: 10px; }
         .iG1b5N_b4c509d547ebc284a4d0 { margin-top: 15px; }
 
+        /* FIX: Icon hover pop effect */
         .cNeTYn_f868b47b56a17c140676 {
             transition: transform 0.2s ease-out;
         }
         .cNeTYn_f868b47b56a17c140676:hover {
             transform: translateY(-3px);
         }
+        /* FIX: Icon color and size */
+        .hZlSYt_87e32c7ed391a936e81d a {
+            color: var(--textColor);
+        }
+        .hZlSYt_87e32c7ed391a936e81d a svg {
+            width: 26px;
+            height: 26px;
+        }
     </style>
 </head>
 <body>
+    <!-- FIX: Video z-index ensures it's visible behind content -->
     <video id="backgroundVideo" class="tlbY3n_ca56e6cc6120e82558ef" loop playsinline muted src="https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4" style="z-index: -1;"></video>
     
     <div id="enterOverlay" class="yRVb3w_4ac5c10f247eb21df8a hUNw2Z_90eaf9aaa3c00ed121cd">
@@ -184,10 +177,10 @@
 
     if(viewCounterWrapper) {
         viewCounterWrapper.addEventListener('mouseover', () => {
-            viewNumberElement.textContent = 'YouTube Views';
+            if (viewNumberElement) viewNumberElement.textContent = 'YouTube Views';
         });
         viewCounterWrapper.addEventListener('mouseout', () => {
-            viewNumberElement.textContent = fetchedViewCount;
+            if (viewNumberElement) viewNumberElement.textContent = fetchedViewCount;
         });
     }
 </script>
