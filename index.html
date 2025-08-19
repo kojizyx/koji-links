@@ -67,12 +67,15 @@
             transition: opacity 0.5s ease-in-out;
         }
 
+        /* --- THIS IS THE ONLY PART THAT HAS CHANGED --- */
         .header-container {
             position: fixed;
-            top: 20px;
-            left: 20px;
+            top: 50%;
+            left: 15vw; /* Pushes the text away from the left edge */
+            transform: translateY(-50%); /* This vertically centers the text block */
             z-index: 10;
         }
+        /* ------------------------------------------- */
 
         .header-container h1 {
             font-weight: 600;
