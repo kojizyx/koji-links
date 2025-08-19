@@ -22,12 +22,15 @@
             font-family: 'Satoshi', sans-serif !important;
         }
 
-        /* Base styles to prevent white flash */
         html, body {
-            background: #000;
+            background: #000 !important; /* Ensures no white flash */
+            color: #c1c7c7;
         }
 
-        /* Enhanced TV effect to be more dim and noticeable */
+        * {
+            cursor: url(https://r2.guns.lol/20d39f70-97a0-47a5-a774-ed64c90cbcd8.png) 16 16, auto !important;
+        }
+
         .tv-effect-overlay {
             position: fixed;
             inset: 0;
@@ -36,23 +39,20 @@
             pointer-events: none;
         }
 
-        /* Main content starts hidden and has the pop-down animation */
         #mainContent {
             opacity: 0;
             pointer-events: none;
-            user-select: none; /* Prevents text from being copied */
+            user-select: none;
             animation: popInWithBlur 0.7s forwards ease-out;
-            animation-play-state: paused; /* Animation will wait until triggered */
+            animation-play-state: paused;
         }
         
-        /* The click screen now blurs the background */
         #enterOverlay {
             background: rgba(0,0,0,0.5);
             backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px); /* For Safari */
+            -webkit-backdrop-filter: blur(5px);
         }
 
-        /* The pop-down with blur animation */
         @keyframes popInWithBlur {
             from {
                 opacity: 0;
@@ -66,20 +66,13 @@
             }
         }
 
-        /* Add glow effect to the name */
         .sbXTUc_b7ae81993acc636a36eb > h1 {
             text-shadow: var(--colorUsernameGlow);
         }
 
-        /* Fix spacing to be less close */
-        .sbXTUc_b7ae81993acc636a36eb > h3 {
-            margin-top: 10px;
-        }
-        .iG1b5N_b4c509d547ebc284a4d0 {
-            margin-top: 15px;
-        }
+        .sbXTUc_b7ae81993acc636a36eb > h3 { margin-top: 10px; }
+        .iG1b5N_b4c509d547ebc284a4d0 { margin-top: 15px; }
 
-        /* Add hover pop effect to icons */
         .cNeTYn_f868b47b56a17c140676 {
             transition: transform 0.2s ease-out;
         }
@@ -89,7 +82,7 @@
     </style>
 </head>
 <body>
-    <video id="backgroundVideo" class="tlbY3n_ca56e6cc6120e82558ef" loop playsinline muted src="https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4"></video>
+    <video id="backgroundVideo" class="tlbY3n_ca56e6cc6120e82558ef" loop playsinline muted src="https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4" style="z-index: -1;"></video>
     
     <div id="enterOverlay" class="yRVb3w_4ac5c10f247eb21df8a hUNw2Z_90eaf9aaa3c00ed121cd">
         <div class="tz1elc_dbdc0f63fcf9ce25e8c2" style="font-weight:700;font-size:30px">Click &lt;3</div>
@@ -126,7 +119,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="view-counter" style="position:fixed; bottom:12px; left:15px; font-weight:550; font-size:14px; display: flex; align-items: center; gap: 6px;">
+                            <div id="view-counter-wrapper" style="position:fixed; bottom:12px; left:15px; font-weight:550; font-size:14px; display: flex; align-items: center; gap: 6px;">
                                 <svg height="1em" viewBox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5" fill="currentColor"></path></svg>
                                 <span id="view-number">0</span>
                             </div>
@@ -141,9 +134,9 @@
     const enterOverlay = document.getElementById('enterOverlay');
     const backgroundVideo = document.getElementById('backgroundVideo');
     const mainContent = document.getElementById('mainContent');
-    const viewCounter = document.getElementById('view-counter');
+    const viewCounterWrapper = document.getElementById('view-counter-wrapper');
     const viewNumberElement = document.getElementById('view-number');
-    let fetchedViewCount = '0'; // To store the fetched number
+    let fetchedViewCount = '0';
 
     function startSite() {
         enterOverlay.style.display = 'none';
@@ -151,13 +144,12 @@
             backgroundVideo.muted = false;
             backgroundVideo.play().catch(error => console.error("Video failed to play:", error));
         }
-        mainContent.style.animationPlayState = 'running'; // Start the pop-down animation
-        mainContent.style.pointerEvents = 'auto'; // Make content clickable
+        mainContent.style.animationPlayState = 'running';
+        mainContent.style.pointerEvents = 'auto';
     }
     
     enterOverlay.addEventListener('click', startSite);
 
-    // Typing animation for the title
     (function() {
         const word = "@koji";
         let i = 0;
@@ -166,10 +158,9 @@
             if (forward) { i++; if (i === word.length) forward = false; } 
             else { i--; if (i === 1) forward = true; }
             document.title = word.substring(0, i);
-        }, 400); // Slower speed
+        }, 400);
     })();
 
-    // YouTube View Counter
     const apiKey = 'AIzaSyCTVfiag9MBGkifvzMzbx74KWbvATwj3V8';
     const channelId = 'UC3IG4vAafVfkfSRufBy3sJw';
 
@@ -191,12 +182,11 @@
             });
     }
 
-    // View counter hover effect
-    if(viewCounter) {
-        viewCounter.addEventListener('mouseover', () => {
+    if(viewCounterWrapper) {
+        viewCounterWrapper.addEventListener('mouseover', () => {
             viewNumberElement.textContent = 'YouTube Views';
         });
-        viewCounter.addEventListener('mouseout', () => {
+        viewCounterWrapper.addEventListener('mouseout', () => {
             viewNumberElement.textContent = fetchedViewCount;
         });
     }
