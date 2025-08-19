@@ -34,7 +34,11 @@
             top: 0; left: 0;
             width: 100%; height: 100%;
             object-fit: cover;
-            z-index: -2;
+            z-index: -3; /* Deepest layer */
+        }
+        .video-dim-overlay {
+            position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background: rgba(0,0,0,0.25); /* Dims the video */
         }
         .tv-effect-overlay {
             position: fixed; inset: 0; z-index: -1; pointer-events: none;
@@ -43,18 +47,21 @@
         #enterOverlay {
             position: fixed; inset: 0; z-index: 100;
             display: flex; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.75); /* Dimmed to 75% */
+            backdrop-filter: blur(10px); /* Super blurie */
+            -webkit-backdrop-filter: blur(10px);
             font-weight: 700;
-            font-size: 30px;
+        }
+        #enterOverlay > div {
+            font-size: 30px; /* Text size on click screen */
+            text-shadow: 0 0 15px var(--text-color); /* Glowing text */
         }
 
-        /* --- Main Content Layout (The Fix) --- */
+        /* --- Main Content Layout --- */
         #mainContent {
             position: fixed; inset: 0;
             display: flex;
-            align-items: center; /* This is the key to vertical centering */
+            align-items: center; /* Vertically centers the content block */
             z-index: 10;
             opacity: 0;
             pointer-events: none;
@@ -70,22 +77,22 @@
             padding-left: 15vw; /* Pushes text from the left edge */
         }
         .text-info h1 {
-            font-size: 39.5px;
+            font-size: 50px; /* 25% bigger */
             font-weight: 600;
             margin: 0;
             text-shadow: var(--username-glow);
         }
         .text-info h3 {
-            font-size: 19px;
+            font-size: 24px; /* 25% bigger */
             font-weight: 570;
             margin: 10px 0 0 0;
         }
         
         /* --- Icons --- */
         .social-icons {
-            margin-top: 15px;
+            margin-top: 20px;
             display: flex;
-            gap: 15px; /* more space */
+            gap: 20px;
         }
         .social-icons a {
             color: var(--text-color);
@@ -96,25 +103,32 @@
             transform: translateY(-3px);
         }
         .social-icons svg {
-            width: 28px;
-            height: 28px;
+            width: 35px; /* 25% bigger */
+            height: 35px;
         }
 
         /* --- View Counter --- */
         #view-counter-wrapper {
             position: fixed;
-            bottom: 12px; left: 15px;
+            left: 50%;
+            bottom: 25%; /* Up from the floor */
+            transform: translateX(-50%); /* Centered horizontally */
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             font-weight: 550;
-            font-size: 14px;
+            font-size: 18px; /* 25% bigger */
             pointer-events: auto;
+            background: rgba(193,199,199,0.07);
+            border: 2px solid rgba(193,199,199,0.15);
+            border-radius: 12px;
+            padding: 10px 16px;
         }
     </style>
 </head>
 <body>
     <video id="backgroundVideo" loop playsinline muted src="https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4"></video>
+    <div class="video-dim-overlay"></div>
     <div class="tv-effect-overlay"></div>
 
     <div id="mainContent">
@@ -138,7 +152,7 @@
         </div>
     </div>
     
-    <div id="enterOverlay">Click &lt;3</div>
+    <div id="enterOverlay"><div>Click &lt;3</div></div>
 
 <script>
     const enterOverlay = document.getElementById('enterOverlay');
