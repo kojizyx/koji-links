@@ -47,13 +47,13 @@
         #enterOverlay {
             position: fixed; inset: 0; z-index: 100;
             display: flex; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.75); /* Dimmed to 75% */
+            background: rgba(0,0,0,0.85); /* Dimmed to 75% */
             backdrop-filter: blur(10px); /* Super blurie */
             -webkit-backdrop-filter: blur(10px);
             font-weight: 700;
         }
         #enterOverlay > div {
-            font-size: 30px; /* Text size on click screen */
+            font-size: 35px; /* Text size on click screen */
             text-shadow: 0 0 15px var(--text-color); /* Glowing text */
         }
 
@@ -74,10 +74,11 @@
             to { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
         .content-block {
-            padding-left: 15vw; /* Pushes text from the left edge */
+    width: 100%; /* Make the block take up the full width */
+    text-align: center; /* Center all the text and icons inside it */
         }
         .text-info h1 {
-            font-size: 50px; /* 25% bigger */
+            font-size: 40px; /* 25% bigger */
             font-weight: 600;
             margin: 0;
             text-shadow: var(--username-glow);
@@ -92,7 +93,7 @@
         .social-icons {
             margin-top: 20px;
             display: flex;
-            gap: 20px;
+            gap: 23px;
         }
         .social-icons a {
             color: var(--text-color);
@@ -103,15 +104,15 @@
             transform: translateY(-3px);
         }
         .social-icons svg {
-            width: 35px; /* 25% bigger */
-            height: 35px;
+            width: 40px; /* 25% bigger */
+            height: 40px;
         }
 
         /* --- View Counter --- */
         #view-counter-wrapper {
             position: fixed;
             left: 50%;
-            bottom: 25%; /* Up from the floor */
+            bottom: 45%; /* Up from the floor */
             transform: translateX(-50%); /* Centered horizontally */
             display: flex;
             align-items: center;
@@ -221,3 +222,4 @@
 
 </body>
 </html>
+
