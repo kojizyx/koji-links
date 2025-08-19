@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
     
-    <!-- Using your original style files -->
+    <!-- Original style files -->
     <link href="styles/ff9399e606869db4.css" rel="stylesheet"/>
     <link href="styles/70796fed0f690c8f.css" rel="stylesheet"/>
     <link href="styles/6054a835c0611161.css" rel="stylesheet"/>
@@ -28,29 +28,32 @@
             z-index: 0;
             pointer-events: none;
         }
-        /* The main content starts invisible */
         #mainContent {
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
             pointer-events: none;
         }
+        /* This makes the click screen have a dim background */
+        .yRVb3w_4ac5c10f247eb21df8a {
+             background: rgba(0,0,0,0.8);
+        }
     </style>
 </head>
 <body>
-    <!-- Video starts muted and without autoplay -->
+    <!-- Video autoplay has been REMOVED. Added an ID for the script. -->
     <video id="backgroundVideo" class="tlbY3n_ca56e6cc6120e82558ef" loop playsinline muted src="https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4"></video>
     
-    <!-- This overlay appears on load, instantly -->
+    <!-- Click screen text changed to "Click <3". Added an ID. -->
     <div id="enterOverlay" class="yRVb3w_4ac5c10f247eb21df8a hUNw2Z_90eaf9aaa3c00ed121cd">
         <div class="tz1elc_dbdc0f63fcf9ce25e8c2" style="font-weight:700;font-size:30px">Click &lt;3</div>
     </div>
     
     <!-- TV static effect -->
     <div class="tv-effect-overlay"></div>
-
-    <!-- This div holds all your content and fades in -->
+    
+    <!-- Main content starts hidden and fades in -->
     <div id="mainContent">
-        <!-- THEME COLORS ARE RESTORED HERE -->
+        <!-- This is your original HTML structure with correct colors and layout -->
         <div class="sScRLn_e606f195670897bc74a6" style="background-color:#c1c7c7"></div>
         <div style="--presenceUsernameColor:#c1c7c7;--presenceStatusColor:rgba(193, 199, 199, 0.7);--presenceContainerBackground:rgba(193, 199, 199, 0.07);--presenceContainerBorder:2px solid rgba(193, 199, 199, 0.05);--discordServerMembers:rgba(193, 199, 199, 0.6);--secondTabBackground:rgba(193, 199, 199, 0.07);--secondTabBorder:2px solid rgba(193, 199, 199, 0.05);--discordMissingIcon:rgba(193, 199, 199, 0.25);--modernLayoutSeperator:rgba(193, 199, 199, 0.12);--modernLayoutSeperatorBorder:rgba(193, 199, 199, 0.12);--discordAvatarBorder:2px solid rgba(193, 199, 199, 0.15);--badgeContainerBackground:rgba(193, 199, 199, 0.08);--badgeContainerBorder:2px solid rgba(193, 199, 199, 0.04);--userBadge:20.5px;--textColor:#c1c7c7;--textColorDarker:rgba(193, 199, 199, 0.5);--iconColor:#c1c7c7;--backgroundColor:#c1c7c7;--joinStatus:rgba(193, 199, 199, 0.65);--audioPlayerBar:rgba(193, 199, 199, 0.35);--avatarBorder:2px solid rgba(193, 199, 199, 0.4);--containerColor:rgba(193, 199, 199, 0);--containerBlur:0px;--containerRadius:20px;--containerWidth:40rem;--containerPadding:35px 15px;--volumeBackgroundcolor:rgba(193, 199, 199, 0.2);--volumeBorder:2px solid rgba(193, 199, 199, 0.05);--colorUsernameGlow:0px 0px 16.5px #c1c7c7;--buttonBackground:rgba(193, 199, 199, 0.22);--buttonBorder:2px solid rgba(193, 199, 199, 0.12);--buttonRadius:12px;--buttonAlign:center;--buttonBackgroundHover:rgba(193, 199, 199, 0.32);--buttonBorderHover:2px solid rgba(193, 199, 199, 0.25);--buttonUrlColor:rgba(193, 199, 199, 0.65);--profileViewsContainerBorder:2px solid rgba(255, 255, 255, 0);--templatePreviewContainerBackground:rgba(193, 199, 199, 0.4);--platformTextColor:rgba(193, 199, 199, 0.4);--secondTabWidgetDescription:rgba(193, 199, 199, 0.6);--audioIconBackground:rgba(193, 199, 199, 0.2);--progessBarFull:rgba(193, 199, 199, 0.3);--progessBarPlaying:#c1c7c7;--controlButtonsOther:rgba(193, 199, 199, 0.5);--controlButtonPlaying:#c1c7c7;--controlTextColor:rgba(193, 199, 199, 0.7);--modernLayoutBottomLeftDivider:rgba(193, 199, 199, 0.14);--sleekLayoutTopRightDivider:rgba(193, 199, 199, 0.14)">
             <div class="tblzYX_8d25fbd2ec018e7f3333">
@@ -67,7 +70,7 @@
                                     <div class="hZlSYt_87e32c7ed391a936e81d">
                                         <div class="cNeTYn_f868b47b56a17c140676">
                                             <a href="https://youtube.com/@Koji_z" target="_blank">
-                                                <svg height="1em" viewBox="1.99 5 20.01 14.01" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21.593 7.203a2.506 2.506 0 0 0-1.762-1.766C18.265 5.007 12 5 12 5s-6.264-.007-7.831.404a2.56 2.56 0 0 0-1.766 1.778c-.413 1.566-.417 4.814-.417 4.814s-.004 3.264.406 4.814c.23.857.905 1.534 1.763 1.765c1.582.43 7.83.437 7.83.437s6.265.007 7.831-.403a2.515 2.515 0 0 0 1.767-1.763c.414-1.565.417-4.812.417-4.812s.02-3.265-.407-4.831zM9.996 15.005l.005-6l5.207 3.005l-5.212 2.995z" fill="currentColor"></path></svg>
+                                                <svg height="1em" viewBox="1.99 5 20.01 14.01" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21.593 7.203a2.506 2.506 0 0 0-1.762-1.766C18.265 5.007 12 5 12 5s-6.264-.007-7.831.404a2.56 2.56 0 0 0-1.766 1.778c-.413 1.566-.417 4.814-.417 4.814s-.004 3.264.406 4.814c.23.857.905 1.534 1.763 1.765c1.582.43 7.83.437 7.83.authofill-selected 7s6.265.007 7.831-.403a2.515 2.515 0 0 0 1.767-1.763c.414-1.565.417-4.812.417-4.812s.02-3.265-.407-4.831zM9.996 15.005l.005-6l5.207 3.005l-5.212 2.995z" fill="currentColor"></path></svg>
                                             </a>
                                         </div>
                                         <div class="cNeTYn_f868b47b56a17c140676">
@@ -78,9 +81,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- VIEW COUNTER IS NOW BACK IN THE BOTTOM LEFT -->
+                            <!-- VIEW COUNTER in the bottom left -->
                             <div style="position:fixed; bottom:12px; left:15px; font-weight:550; font-size:14px; display: flex; align-items: center; gap: 6px;">
                                 <svg height="1em" viewBox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5" fill="currentColor"></path></svg>
+                                <!-- The number will be inserted here by the script -->
                                 <span id="view-number">0</span>
                             </div>
                         </div>
@@ -95,10 +99,11 @@
     const backgroundVideo = document.getElementById('backgroundVideo');
     const mainContent = document.getElementById('mainContent');
 
-    // This ensures the click screen is visible when the page loads
-    function initializeOverlay() {
+    // Make sure the click screen is visible when the page loads
+    function initialize() {
         enterOverlay.style.display = 'flex';
         enterOverlay.style.opacity = '1';
+        mainContent.style.opacity = '0'; // Ensure content starts hidden
     }
 
     function startSite() {
@@ -113,13 +118,12 @@
             });
         }
         
-        // Show main content and make it clickable
+        // Fade in main content and make it clickable
         mainContent.style.opacity = '1';
         mainContent.style.pointerEvents = 'auto';
     }
     
-    // Set up the page
-    initializeOverlay();
+    initialize();
     enterOverlay.addEventListener('click', startSite);
 
     // Typing animation for the title
