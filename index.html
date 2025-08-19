@@ -21,7 +21,6 @@
         body, * {
             font-family: 'Satoshi', sans-serif !important;
         }
-        /* TV Effect for the video background */
         .tv-effect-overlay {
             position: fixed;
             inset: 0;
@@ -29,22 +28,11 @@
             z-index: 0;
             pointer-events: none;
         }
-        /* Centered View Counter */
-        #view-counter-container {
-            position: fixed;
-            bottom: 50%;
-            left: 50%;
-            transform: translate(-50%, 50%);
-            background: rgba(193,199,199,0.07);
-            border: 2px solid rgba(193,199,199,0.15);
-            border-radius: 12px;
-            padding: 8px 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 550;
-            font-size: 16px;
-            z-index: 10;
+        /* The main content starts invisible */
+        #mainContent {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -52,19 +40,19 @@
     <!-- Video starts muted and without autoplay -->
     <video id="backgroundVideo" class="tlbY3n_ca56e6cc6120e82558ef" loop playsinline muted src="https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4"></video>
     
-    <!-- This overlay appears on load -->
-    <div id="enterOverlay" class="yRVb3w_4ac5c10f247eb261df8a hUNw2Z_90eaf9aaa3c00ed121cd">
+    <!-- This overlay appears on load, instantly -->
+    <div id="enterOverlay" class="yRVb3w_4ac5c10f247eb21df8a hUNw2Z_90eaf9aaa3c00ed121cd">
         <div class="tz1elc_dbdc0f63fcf9ce25e8c2" style="font-weight:700;font-size:30px">Click &lt;3</div>
     </div>
     
     <!-- TV static effect -->
     <div class="tv-effect-overlay"></div>
 
-    <!-- Main content starts hidden -->
-    <div id="mainContent" style="opacity: 0; transition: opacity 0.5s ease-in-out;">
-        <!-- This is the exact layout structure from guns.lol for correct text placement -->
+    <!-- This div holds all your content and fades in -->
+    <div id="mainContent">
+        <!-- THEME COLORS ARE RESTORED HERE -->
         <div class="sScRLn_e606f195670897bc74a6" style="background-color:#c1c7c7"></div>
-        <div style="--textColor:#c1c7c7;">
+        <div style="--presenceUsernameColor:#c1c7c7;--presenceStatusColor:rgba(193, 199, 199, 0.7);--presenceContainerBackground:rgba(193, 199, 199, 0.07);--presenceContainerBorder:2px solid rgba(193, 199, 199, 0.05);--discordServerMembers:rgba(193, 199, 199, 0.6);--secondTabBackground:rgba(193, 199, 199, 0.07);--secondTabBorder:2px solid rgba(193, 199, 199, 0.05);--discordMissingIcon:rgba(193, 199, 199, 0.25);--modernLayoutSeperator:rgba(193, 199, 199, 0.12);--modernLayoutSeperatorBorder:rgba(193, 199, 199, 0.12);--discordAvatarBorder:2px solid rgba(193, 199, 199, 0.15);--badgeContainerBackground:rgba(193, 199, 199, 0.08);--badgeContainerBorder:2px solid rgba(193, 199, 199, 0.04);--userBadge:20.5px;--textColor:#c1c7c7;--textColorDarker:rgba(193, 199, 199, 0.5);--iconColor:#c1c7c7;--backgroundColor:#c1c7c7;--joinStatus:rgba(193, 199, 199, 0.65);--audioPlayerBar:rgba(193, 199, 199, 0.35);--avatarBorder:2px solid rgba(193, 199, 199, 0.4);--containerColor:rgba(193, 199, 199, 0);--containerBlur:0px;--containerRadius:20px;--containerWidth:40rem;--containerPadding:35px 15px;--volumeBackgroundcolor:rgba(193, 199, 199, 0.2);--volumeBorder:2px solid rgba(193, 199, 199, 0.05);--colorUsernameGlow:0px 0px 16.5px #c1c7c7;--buttonBackground:rgba(193, 199, 199, 0.22);--buttonBorder:2px solid rgba(193, 199, 199, 0.12);--buttonRadius:12px;--buttonAlign:center;--buttonBackgroundHover:rgba(193, 199, 199, 0.32);--buttonBorderHover:2px solid rgba(193, 199, 199, 0.25);--buttonUrlColor:rgba(193, 199, 199, 0.65);--profileViewsContainerBorder:2px solid rgba(255, 255, 255, 0);--templatePreviewContainerBackground:rgba(193, 199, 199, 0.4);--platformTextColor:rgba(193, 199, 199, 0.4);--secondTabWidgetDescription:rgba(193, 199, 199, 0.6);--audioIconBackground:rgba(193, 199, 199, 0.2);--progessBarFull:rgba(193, 199, 199, 0.3);--progessBarPlaying:#c1c7c7;--controlButtonsOther:rgba(193, 199, 199, 0.5);--controlButtonPlaying:#c1c7c7;--controlTextColor:rgba(193, 199, 199, 0.7);--modernLayoutBottomLeftDivider:rgba(193, 199, 199, 0.14);--sleekLayoutTopRightDivider:rgba(193, 199, 199, 0.14)">
             <div class="tblzYX_8d25fbd2ec018e7f3333">
                 <div class="uwYFmB_089e78ae7261139e29df">
                     <div class="wbQul1_35f2a4c5b48e5f22cb72" style="position:fixed">
@@ -90,8 +78,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Centered view counter -->
-                            <div id="view-counter-container">
+                            <!-- VIEW COUNTER IS NOW BACK IN THE BOTTOM LEFT -->
+                            <div style="position:fixed; bottom:12px; left:15px; font-weight:550; font-size:14px; display: flex; align-items: center; gap: 6px;">
                                 <svg height="1em" viewBox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5" fill="currentColor"></path></svg>
                                 <span id="view-number">0</span>
                             </div>
@@ -107,6 +95,12 @@
     const backgroundVideo = document.getElementById('backgroundVideo');
     const mainContent = document.getElementById('mainContent');
 
+    // This ensures the click screen is visible when the page loads
+    function initializeOverlay() {
+        enterOverlay.style.display = 'flex';
+        enterOverlay.style.opacity = '1';
+    }
+
     function startSite() {
         // Hide overlay instantly
         enterOverlay.style.display = 'none';
@@ -119,10 +113,13 @@
             });
         }
         
-        // Show main content
+        // Show main content and make it clickable
         mainContent.style.opacity = '1';
+        mainContent.style.pointerEvents = 'auto';
     }
-
+    
+    // Set up the page
+    initializeOverlay();
     enterOverlay.addEventListener('click', startSite);
 
     // Typing animation for the title
