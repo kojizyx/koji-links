@@ -21,41 +21,86 @@
         body, * {
             font-family: 'Satoshi', sans-serif !important;
         }
+
+        /* Base styles to prevent white flash */
+        html, body {
+            background: #000;
+        }
+
+        /* Enhanced TV effect to be more dim and noticeable */
         .tv-effect-overlay {
             position: fixed;
             inset: 0;
-            background: repeating-linear-gradient(rgba(0,0,0,0.3) 0, rgba(0,0,0,0.3) 1px, transparent 1px, transparent 2px);
+            background: repeating-linear-gradient(rgba(0,0,0,0.4) 0, rgba(0,0,0,0.4) 1px, transparent 1px, transparent 2px);
             z-index: 0;
             pointer-events: none;
         }
+
+        /* Main content starts hidden and has the pop-down animation */
         #mainContent {
             opacity: 0;
-            transition: opacity 0.5s ease-in-out;
             pointer-events: none;
+            user-select: none; /* Prevents text from being copied */
+            animation: popInWithBlur 0.7s forwards ease-out;
+            animation-play-state: paused; /* Animation will wait until triggered */
         }
-        /* This makes the click screen have a dim background */
-        .yRVb3w_4ac5c10f247eb21df8a {
-             background: rgba(0,0,0,0.8);
+        
+        /* The click screen now blurs the background */
+        #enterOverlay {
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px); /* For Safari */
+        }
+
+        /* The pop-down with blur animation */
+        @keyframes popInWithBlur {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+                filter: blur(5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        /* Add glow effect to the name */
+        .sbXTUc_b7ae81993acc636a36eb > h1 {
+            text-shadow: var(--colorUsernameGlow);
+        }
+
+        /* Fix spacing to be less close */
+        .sbXTUc_b7ae81993acc636a36eb > h3 {
+            margin-top: 10px;
+        }
+        .iG1b5N_b4c509d547ebc284a4d0 {
+            margin-top: 15px;
+        }
+
+        /* Add hover pop effect to icons */
+        .cNeTYn_f868b47b56a17c140676 {
+            transition: transform 0.2s ease-out;
+        }
+        .cNeTYn_f868b47b56a17c140676:hover {
+            transform: translateY(-3px);
         }
     </style>
 </head>
 <body>
-    <!-- Video autoplay has been REMOVED. Added an ID for the script. -->
     <video id="backgroundVideo" class="tlbY3n_ca56e6cc6120e82558ef" loop playsinline muted src="https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4"></video>
     
-    <!-- Click screen text changed to "Click <3". Added an ID. -->
     <div id="enterOverlay" class="yRVb3w_4ac5c10f247eb21df8a hUNw2Z_90eaf9aaa3c00ed121cd">
         <div class="tz1elc_dbdc0f63fcf9ce25e8c2" style="font-weight:700;font-size:30px">Click &lt;3</div>
     </div>
     
-    <!-- TV static effect -->
     <div class="tv-effect-overlay"></div>
     
-    <!-- Main content starts hidden and fades in -->
     <div id="mainContent">
-        <!-- This is your original HTML structure with correct colors and layout -->
+        <!-- Using the original HTML structure and color variables for a perfect match -->
         <div class="sScRLn_e606f195670897bc74a6" style="background-color:#c1c7c7"></div>
-        <div style="--presenceUsernameColor:#c1c7c7;--presenceStatusColor:rgba(193, 199, 199, 0.7);--presenceContainerBackground:rgba(193, 199, 199, 0.07);--presenceContainerBorder:2px solid rgba(193, 199, 199, 0.05);--discordServerMembers:rgba(193, 199, 199, 0.6);--secondTabBackground:rgba(193, 199, 199, 0.07);--secondTabBorder:2px solid rgba(193, 199, 199, 0.05);--discordMissingIcon:rgba(193, 199, 199, 0.25);--modernLayoutSeperator:rgba(193, 199, 199, 0.12);--modernLayoutSeperatorBorder:rgba(193, 199, 199, 0.12);--discordAvatarBorder:2px solid rgba(193, 199, 199, 0.15);--badgeContainerBackground:rgba(193, 199, 199, 0.08);--badgeContainerBorder:2px solid rgba(193, 199, 199, 0.04);--userBadge:20.5px;--textColor:#c1c7c7;--textColorDarker:rgba(193, 199, 199, 0.5);--iconColor:#c1c7c7;--backgroundColor:#c1c7c7;--joinStatus:rgba(193, 199, 199, 0.65);--audioPlayerBar:rgba(193, 199, 199, 0.35);--avatarBorder:2px solid rgba(193, 199, 199, 0.4);--containerColor:rgba(193, 199, 199, 0);--containerBlur:0px;--containerRadius:20px;--containerWidth:40rem;--containerPadding:35px 15px;--volumeBackgroundcolor:rgba(193, 199, 199, 0.2);--volumeBorder:2px solid rgba(193, 199, 199, 0.05);--colorUsernameGlow:0px 0px 16.5px #c1c7c7;--buttonBackground:rgba(193, 199, 199, 0.22);--buttonBorder:2px solid rgba(193, 199, 199, 0.12);--buttonRadius:12px;--buttonAlign:center;--buttonBackgroundHover:rgba(193, 199, 199, 0.32);--buttonBorderHover:2px solid rgba(193, 199, 199, 0.25);--buttonUrlColor:rgba(193, 199, 199, 0.65);--profileViewsContainerBorder:2px solid rgba(255, 255, 255, 0);--templatePreviewContainerBackground:rgba(193, 199, 199, 0.4);--platformTextColor:rgba(193, 199, 199, 0.4);--secondTabWidgetDescription:rgba(193, 199, 199, 0.6);--audioIconBackground:rgba(193, 199, 199, 0.2);--progessBarFull:rgba(193, 199, 199, 0.3);--progessBarPlaying:#c1c7c7;--controlButtonsOther:rgba(193, 199, 199, 0.5);--controlButtonPlaying:#c1c7c7;--controlTextColor:rgba(193, 199, 199, 0.7);--modernLayoutBottomLeftDivider:rgba(193, 199, 199, 0.14);--sleekLayoutTopRightDivider:rgba(193, 199, 199, 0.14)">
+        <div style="--presenceUsernameColor:#c1c7c7;--presenceStatusColor:rgba(193, 199, 199, 0.7);--presenceContainerBackground:rgba(193, 199, 199, 0.07);--presenceContainerBorder:2px solid rgba(193, 199, 199, 0.05);--discordServerMembers:rgba(193, 199, 199, 0.6);--secondTabBackground:rgba(193, 199, 199, 0.07);--secondTabBorder:2px solid rgba(193, 199, 199, 0.05);--discordMissingIcon:rgba(193, 199, 199, 0.25);--modernLayoutSeperator:rgba(193, 199, 199, 0.12);--modernLayoutSeperatorBorder:rgba(193, 199, 199, 0.12);--discordAvatarBorder:2px solid rgba(193, 199, 199, 0.15);--badgeContainerBackground:rgba(193, 199, 199, 0.08);--badgeContainerBorder:2px solid rgba(193, 199, 199, 0.04);--userBadge:20.5px;--textColor:#c1c7c7;--textColorDarker:rgba(193, 199, 199, 0.5);--iconColor:#c1c7c7;--backgroundColor:#000;--joinStatus:rgba(193, 199, 199, 0.65);--audioPlayerBar:rgba(193, 199, 199, 0.35);--avatarBorder:2px solid rgba(193, 199, 199, 0.4);--containerColor:rgba(193, 199, 199, 0);--containerBlur:0px;--containerRadius:20px;--containerWidth:40rem;--containerPadding:35px 15px;--volumeBackgroundcolor:rgba(193, 199, 199, 0.2);--volumeBorder:2px solid rgba(193, 199, 199, 0.05);--colorUsernameGlow:0px 0px 16.5px #c1c7c7;--buttonBackground:rgba(193, 199, 199, 0.22);--buttonBorder:2px solid rgba(193, 199, 199, 0.12);--buttonRadius:12px;--buttonAlign:center;--buttonBackgroundHover:rgba(193, 199, 199, 0.32);--buttonBorderHover:2px solid rgba(193, 199, 199, 0.25);--buttonUrlColor:rgba(193, 199, 199, 0.65);--profileViewsContainerBorder:2px solid rgba(255, 255, 255, 0);--templatePreviewContainerBackground:rgba(193, 199, 199, 0.4);--platformTextColor:rgba(193, 199, 199, 0.4);--secondTabWidgetDescription:rgba(193, 199, 199, 0.6);--audioIconBackground:rgba(193, 199, 199, 0.2);--progessBarFull:rgba(193, 199, 199, 0.3);--progessBarPlaying:#c1c7c7;--controlButtonsOther:rgba(193, 199, 199, 0.5);--controlButtonPlaying:#c1c7c7;--controlTextColor:rgba(193, 199, 199, 0.7);--modernLayoutBottomLeftDivider:rgba(193, 199, 199, 0.14);--sleekLayoutTopRightDivider:rgba(193, 199, 199, 0.14)">
             <div class="tblzYX_8d25fbd2ec018e7f3333">
                 <div class="uwYFmB_089e78ae7261139e29df">
                     <div class="wbQul1_35f2a4c5b48e5f22cb72" style="position:fixed">
@@ -63,14 +108,14 @@
                             <div class="fxhYyF_d0dc3a8bbeb8294cbc40">
                                 <div></div>
                                 <div class="sbXTUc_b7ae81993acc636a36eb false">
-                                    <h1 style="font-weight:600;font-size:39.5px">koji</h1>
-                                    <h3 style="font-weight:570;font-size:19px">i make videos when i feel like it</h3>
+                                    <h1>koji</h1>
+                                    <h3>i make videos when i feel like it</h3>
                                 </div>
                                 <div class="iG1b5N_b4c509d547ebc284a4d0 false">
                                     <div class="hZlSYt_87e32c7ed391a936e81d">
                                         <div class="cNeTYn_f868b47b56a17c140676">
                                             <a href="https://youtube.com/@Koji_z" target="_blank">
-                                                <svg height="1em" viewBox="1.99 5 20.01 14.01" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21.593 7.203a2.506 2.506 0 0 0-1.762-1.766C18.265 5.007 12 5 12 5s-6.264-.007-7.831.404a2.56 2.56 0 0 0-1.766 1.778c-.413 1.566-.417 4.814-.417 4.814s-.004 3.264.406 4.814c.23.857.905 1.534 1.763 1.765c1.582.43 7.83.437 7.83.authofill-selected 7s6.265.007 7.831-.403a2.515 2.515 0 0 0 1.767-1.763c.414-1.565.417-4.812.417-4.812s.02-3.265-.407-4.831zM9.996 15.005l.005-6l5.207 3.005l-5.212 2.995z" fill="currentColor"></path></svg>
+                                                <svg height="1em" viewBox="1.99 5 20.01 14.01" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21.593 7.203a2.506 2.506 0 0 0-1.762-1.766C18.265 5.007 12 5 12 5s-6.264-.007-7.831.404a2.56 2.56 0 0 0-1.766 1.778c-.413 1.566-.417 4.814-.417 4.814s-.004 3.264.406 4.814c.23.857.905 1.534 1.763 1.765c1.582.43 7.83.437 7.83.437s6.265.007 7.831-.403a2.515 2.515 0 0 0 1.767-1.763c.414-1.565.417-4.812.417-4.812s.02-3.265-.407-4.831zM9.996 15.005l.005-6l5.207 3.005l-5.212 2.995z" fill="currentColor"></path></svg>
                                             </a>
                                         </div>
                                         <div class="cNeTYn_f868b47b56a17c140676">
@@ -81,10 +126,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- VIEW COUNTER in the bottom left -->
-                            <div style="position:fixed; bottom:12px; left:15px; font-weight:550; font-size:14px; display: flex; align-items: center; gap: 6px;">
+                            <div id="view-counter" style="position:fixed; bottom:12px; left:15px; font-weight:550; font-size:14px; display: flex; align-items: center; gap: 6px;">
                                 <svg height="1em" viewBox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5" fill="currentColor"></path></svg>
-                                <!-- The number will be inserted here by the script -->
                                 <span id="view-number">0</span>
                             </div>
                         </div>
@@ -98,32 +141,20 @@
     const enterOverlay = document.getElementById('enterOverlay');
     const backgroundVideo = document.getElementById('backgroundVideo');
     const mainContent = document.getElementById('mainContent');
-
-    // Make sure the click screen is visible when the page loads
-    function initialize() {
-        enterOverlay.style.display = 'flex';
-        enterOverlay.style.opacity = '1';
-        mainContent.style.opacity = '0'; // Ensure content starts hidden
-    }
+    const viewCounter = document.getElementById('view-counter');
+    const viewNumberElement = document.getElementById('view-number');
+    let fetchedViewCount = '0'; // To store the fetched number
 
     function startSite() {
-        // Hide overlay instantly
         enterOverlay.style.display = 'none';
-
-        // Play video and unmute
         if (backgroundVideo) {
             backgroundVideo.muted = false;
-            backgroundVideo.play().catch(error => {
-                console.error("Video failed to play:", error);
-            });
+            backgroundVideo.play().catch(error => console.error("Video failed to play:", error));
         }
-        
-        // Fade in main content and make it clickable
-        mainContent.style.opacity = '1';
-        mainContent.style.pointerEvents = 'auto';
+        mainContent.style.animationPlayState = 'running'; // Start the pop-down animation
+        mainContent.style.pointerEvents = 'auto'; // Make content clickable
     }
     
-    initialize();
     enterOverlay.addEventListener('click', startSite);
 
     // Typing animation for the title
@@ -132,13 +163,8 @@
         let i = 0;
         let forward = true;
         setInterval(() => {
-            if (forward) {
-                i++;
-                if (i === word.length) forward = false;
-            } else {
-                i--;
-                if (i === 1) forward = true;
-            }
+            if (forward) { i++; if (i === word.length) forward = false; } 
+            else { i--; if (i === 1) forward = true; }
             document.title = word.substring(0, i);
         }, 400); // Slower speed
     })();
@@ -146,7 +172,6 @@
     // YouTube View Counter
     const apiKey = 'AIzaSyCTVfiag9MBGkifvzMzbx74KWbvATwj3V8';
     const channelId = 'UC3IG4vAafVfkfSRufBy3sJw';
-    const viewNumberElement = document.getElementById('view-number');
 
     if (viewNumberElement) {
         fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelId}&key=${apiKey}`)
@@ -154,7 +179,8 @@
             .then(data => {
                 if (data.items && data.items.length > 0) {
                     const views = data.items[0].statistics.viewCount;
-                    viewNumberElement.textContent = parseInt(views).toLocaleString();
+                    fetchedViewCount = parseInt(views).toLocaleString();
+                    viewNumberElement.textContent = fetchedViewCount;
                 } else {
                     viewNumberElement.textContent = 'Error';
                 }
@@ -163,6 +189,16 @@
                 console.error('Error fetching YouTube data:', error);
                 viewNumberElement.textContent = 'N/A';
             });
+    }
+
+    // View counter hover effect
+    if(viewCounter) {
+        viewCounter.addEventListener('mouseover', () => {
+            viewNumberElement.textContent = 'YouTube Views';
+        });
+        viewCounter.addEventListener('mouseout', () => {
+            viewNumberElement.textContent = fetchedViewCount;
+        });
     }
 </script>
 
