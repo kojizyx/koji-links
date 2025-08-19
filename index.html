@@ -31,10 +31,12 @@
     </style>
 </head>
 <body>
-    <video class="tlbY3n_ca56e6cc6120e82558ef" loop="" playsinline="" src="https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4"></video>
-    <div class="yRVb3w_4ac5c10f247eb261df8a hUNw2Z_90eaf9aaa3c00ed121cd" style="pointer-events: none; display: none;">
+    <video class="tlbY3n_ca56e6cc6120e82558ef" loop="" playsinline="" autoplay muted src="https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4"></video>
+    
+    <div class="yRVb3w_4ac5c10f247eb261df8a hUNw2Z_90eaf9aaa3c00ed121cd">
         <div class="tz1elc_dbdc0f63fcf9ce25e8c2" style="font-weight:700;font-size:30px">click to enter...</div>
     </div>
+
     <div class="htLYGm_326d554dc9e3864a2bdd"></div>
     <style>
         * {
@@ -106,5 +108,68 @@
             </div>
         </div>
     </div>
+
+<script>
+  // --- This script handles the "click to enter" and video audio ---
+  const enterOverlay = document.querySelector('.yRVb3w_4ac5c10f247eb261df8a');
+  const backgroundVideo = document.querySelector('.tlbY3n_ca56e6cc6120e82558ef');
+
+  function startSite() {
+    // Hide the overlay with a fade effect
+    enterOverlay.style.opacity = '0';
+    setTimeout(() => {
+      enterOverlay.style.display = 'none';
+    }, 500);
+    
+    // Unmute the video and try to play it
+    if (backgroundVideo) {
+      backgroundVideo.muted = false;
+      backgroundVideo.play().catch(error => {
+        console.error("Video could not play:", error);
+      });
+    }
+  }
+
+  // Make the overlay visible on load and ready for clicking
+  if (enterOverlay) {
+    enterOverlay.style.display = 'flex';
+    enterOverlay.style.opacity = '1';
+    enterOverlay.style.transition = 'opacity 0.5s ease';
+    enterOverlay.style.cursor = 'pointer';
+    enterOverlay.addEventListener('click', startSite);
+  }
+
+  // --- This script animates the document title ---
+  (function () {
+    const titles = ["@koj", "koji_z", "i make videos"]; // <-- YOU CAN CHANGE THESE TITLES
+    let index = 0;
+    setInterval(() => {
+      document.title = titles[index];
+      index = (index + 1) % titles.length;
+    }, 2000); // Changes every 2 seconds (2000 milliseconds)
+  })();
+
+  // --- This script will handle your YouTube View Count ---
+  // (It will not work until you add your API Key and Channel ID)
+  const apiKey = 'YOUR_API_KEY'; // <-- PUT YOUR API KEY HERE
+  const channelId = 'YOUR_CHANNEL_ID'; // <-- PUT YOUR CHANNEL ID HERE
+  const viewCountElement = document.getElementById('view-count');
+
+  if (viewCountElement && apiKey !== 'YOUR_API_KEY' && channelId !== 'YOUR_CHANNEL_ID') {
+    fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelId}&key=${apiKey}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.items && data.items.length > 0) {
+          const viewCount = data.items[0].statistics.viewCount;
+          // This part finds the number '2' and replaces it
+          viewCountElement.innerHTML = viewCountElement.innerHTML.replace(/<!-- -->2/, viewCount);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching YouTube data:', error);
+      });
+  }
+</script>
+
 </body>
 </html>
