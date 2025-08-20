@@ -125,7 +125,8 @@
     </style>
 </head>
 <body>
-    <video id="backgroundVideo" loop playsinline muted src="https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4"></video>
+    <!-- The video now starts with an EMPTY src to prevent mobile preload -->
+    <video id="backgroundVideo" loop playsinline muted src=""></video>
     <div id="gifBackground"></div>
     <div class="video-dim-overlay"></div>
     <div class="tv-effect-overlay"></div>
@@ -157,7 +158,6 @@
     <div id="enterOverlay"><div>Click &lt;3</div></div>
 
 <script>
-    // this wrapper fixes the mobile audio bug
     document.addEventListener('DOMContentLoaded', () => {
         const enterOverlay = document.getElementById('enterOverlay');
         const backgroundVideo = document.getElementById('backgroundVideo');
@@ -173,13 +173,18 @@
             document.querySelector('#enterOverlay > div').textContent = 'Tap <3';
             gifBackground.style.display = 'block';
             if (backgroundVideo) {
-                backgroundVideo.remove();
+                backgroundVideo.remove(); // this guarantees no audio
+            }
+        } else {
+            // it's a desktop, so set the video source
+            if (backgroundVideo) {
+                backgroundVideo.src = 'https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4';
             }
         }
 
         function startSite() {
             enterOverlay.style.display = 'none';
-            if (backgroundVideo) {
+            if (backgroundVideo && !isTouchDevice) { // only play on desktop
                 backgroundVideo.muted = false;
                 setTimeout(() => {
                     backgroundVideo.volume = 0.25;
