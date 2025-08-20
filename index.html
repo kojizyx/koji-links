@@ -35,15 +35,14 @@
             object-fit: cover;
             z-index: -3;
         }
-        /* this is the new GIF background */
         #gifBackground {
             position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
-            background-image: url('https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExc2pzbHc4M2U0bWszejBjMzlsaGExZ2w5bGNlODdkam40ZHBnaHRraiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/uFmH8za4E6M5STIiTu/giphy.gif'); /* YOUR GIF LINK IS HERE */
+            background-image: url('https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExc2pzbHc4M2U0bWszejBjMzlsaGExZ2w5bGNlODdkam40ZHBnaHRraiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/uFmH8za4E6M5STIiTu/giphy.gif');
             background-size: cover;
             background-position: center;
             z-index: -3;
-            display: none; /* hidden by default */
+            display: none;
         }
         .video-dim-overlay {
             position: fixed; inset: 0; z-index: -2; pointer-events: none;
@@ -152,16 +151,19 @@
     
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
+    // setup based on device
     if (isTouchDevice) {
         document.querySelector('#enterOverlay > div').textContent = 'Tap <3';
         gifBackground.style.display = 'block';
         if (backgroundVideo) {
+            // this is how we remove the video and its audio on mobile
             backgroundVideo.remove();
         }
     }
 
     function startSite() {
         enterOverlay.style.display = 'none';
+        // video only exists on desktop, so this check is safe
         if (backgroundVideo) {
             backgroundVideo.muted = false;
             setTimeout(() => {
@@ -210,6 +212,7 @@
             });
     }
 
+    // no hover effects on mobile
     if (!isTouchDevice && viewCounterWrapper) {
         viewCounterWrapper.addEventListener('mouseover', () => {
             if (viewNumberElement) viewNumberElement.textContent = 'YouTube Views';
