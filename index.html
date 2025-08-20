@@ -47,15 +47,16 @@
         #enterOverlay {
             position: fixed; inset: 0; z-index: 100;
             display: flex; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.85); /* Dimmed to 75% */
+            background: rgba(0,0,0,0.80); /* Dimmed to 75% */
             backdrop-filter: blur(10px); /* Super blurie */
             -webkit-backdrop-filter: blur(10px);
             font-weight: 700;
         }
         #enterOverlay > div {
-            font-size: 35px; /* Text size on click screen */
-            text-shadow: 0 0 15px var(--text-color); /* Glowing text */
-        }
+    font-size: 30px;
+    color: #FFFFFF;           /* This makes the base text pure white */
+    text-shadow: 0 0 15px #FFFFFF; /* This makes the glow pure white */
+}
 
         /* --- Main Content Layout --- */
         #mainContent {
@@ -74,9 +75,11 @@
             to { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
         .content-block {
-    width: 100%; /* Make the block take up the full width */
-    text-align: center; /* Center all the text and icons inside it */
-        }
+    display: flex;
+    flex-direction: column; /* Stack items vertically (h1, h3, icons) */
+    align-items: center;   /* Center all items horizontally */
+    width: 100%;
+}
         .text-info h1 {
             font-size: 40px; /* 25% bigger */
             font-weight: 600;
@@ -112,7 +115,7 @@
         #view-counter-wrapper {
             position: fixed;
             left: 50%;
-            bottom: 45%; /* Up from the floor */
+            bottom: 35%; /* Up from the floor */
             transform: translateX(-50%); /* Centered horizontally */
             display: flex;
             align-items: center;
@@ -222,4 +225,5 @@
 
 </body>
 </html>
+
 
