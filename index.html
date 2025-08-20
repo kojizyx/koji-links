@@ -197,15 +197,20 @@
     }
 
     function startSite() {
-        enterOverlay.style.display = 'none';
-        if (backgroundVideo) {
-            backgroundVideo.muted = false;
-            backgroundVideo.volume = 0.23;
-            backgroundVideo.play().catch(error => console.error("Video failed to play:", error));
-        }
-        mainContent.style.animationPlayState = 'running';
-        mainContent.style.pointerEvents = 'auto';
+    enterOverlay.style.display = 'none';
+    if (backgroundVideo) {
+        // Set the volume once the video actually starts playing
+        backgroundVideo.addEventListener('playing', () => {
+            backgroundVideo.volume = 0.25; // Set your desired volume here (e.g., 25%)
+        }, { once: true }); // This makes sure the event only fires one time
+
+        // Now, unmute and play the video
+        backgroundVideo.muted = false;
+        backgroundVideo.play().catch(error => console.error("Video failed to play:", error));
     }
+    mainContent.style.animationPlayState = 'running';
+    mainContent.style.pointerEvents = 'auto';
+}
     
     if (enterOverlay) {
         enterOverlay.addEventListener('click', startSite);
@@ -257,4 +262,5 @@
 
 </body>
 </html>
+
 
