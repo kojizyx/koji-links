@@ -90,15 +90,26 @@
         .social-icons svg { width: 35px; height: 35px; }
 
         /* --- View Counter --- */
-        #view-counter-wrapper {
+        #view-counter-container { /* new wrapper for counter and label */
             position: fixed; left: 50%; bottom: 25%;
             transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center;
+            pointer-events: none;
+        }
+        #view-counter-wrapper {
             display: flex; align-items: center;
             gap: 8px; font-weight: 550; font-size: 18px; pointer-events: auto;
             background: rgba(193,199,199,0.07);
             border: 2px solid rgba(193,199,199,0.15);
             border-radius: 12px;
             padding: 10px 16px;
+        }
+        .mobile-view-label { /* the new label, hidden by default */
+            display: none;
+            margin-top: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            opacity: 0.6;
         }
         
         /* --- Mobile Adjustments --- */
@@ -107,7 +118,9 @@
             .text-info h1 { font-size: 32px; }
             .text-info h3 { font-size: 18px; }
             .social-icons svg { width: 36px; height: 36px; }
-            #view-counter-wrapper { bottom: 5%; padding: 8px 12px; font-size: 16px; }
+            #view-counter-container { bottom: 5%; } /* reposition the whole block */
+            #view-counter-wrapper { padding: 8px 12px; font-size: 16px; }
+            .mobile-view-label { display: block; } /* show the label */
         }
     </style>
 </head>
@@ -132,9 +145,13 @@
                 </a>
             </div>
         </div>
-        <div id="view-counter-wrapper">
-            <svg height="1em" viewBox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5" fill="currentColor"></path></svg>
-            <span id="view-number">0</span>
+        <!-- The new HTML structure for the view counter -->
+        <div id="view-counter-container">
+            <div id="view-counter-wrapper">
+                <svg height="1em" viewBox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5" fill="currentColor"></path></svg>
+                <span id="view-number">0</span>
+            </div>
+            <div class="mobile-view-label">YouTube Views</div>
         </div>
     </div>
     
@@ -151,19 +168,16 @@
     
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-    // setup based on device
     if (isTouchDevice) {
         document.querySelector('#enterOverlay > div').textContent = 'Tap <3';
         gifBackground.style.display = 'block';
         if (backgroundVideo) {
-            // this is how we remove the video and its audio on mobile
             backgroundVideo.remove();
         }
     }
 
     function startSite() {
         enterOverlay.style.display = 'none';
-        // video only exists on desktop, so this check is safe
         if (backgroundVideo) {
             backgroundVideo.muted = false;
             setTimeout(() => {
@@ -212,7 +226,6 @@
             });
     }
 
-    // no hover effects on mobile
     if (!isTouchDevice && viewCounterWrapper) {
         viewCounterWrapper.addEventListener('mouseover', () => {
             if (viewNumberElement) viewNumberElement.textContent = 'YouTube Views';
