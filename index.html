@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf--8"/>
+    <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
     
     <link rel="icon" type="image/png" href="https://i.imgur.com/LpH1VuP.png"/>
@@ -28,13 +28,22 @@
             cursor: url(https://r2.guns.lol/20d39f70-97a0-47a5-a774-ed64c90cbcd8.png) 16 16, auto !important;
         }
 
-        /* --- Video and Overlays --- */
+        /* --- Video, GIF, and Overlays --- */
         #backgroundVideo {
-            position: fixed;
-            top: 0; left: 0;
+            position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
             object-fit: cover;
             z-index: -3;
+        }
+        /* this is the new GIF background */
+        #gifBackground {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: url('https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExc2pzbHc4M2U0bWszejBjMzlsaGExZ2w5bGNlODdkam40ZHBnaHRraiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/uFmH8za4E6M5STIiTu/giphy.gif'); /* YOUR GIF LINK IS HERE */
+            background-size: cover;
+            background-position: center;
+            z-index: -3;
+            display: none; /* hidden by default */
         }
         .video-dim-overlay {
             position: fixed; inset: 0; z-index: -2; pointer-events: none;
@@ -47,9 +56,8 @@
         #enterOverlay {
             position: fixed; inset: 0; z-index: 100;
             display: flex; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.80);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             font-weight: 700;
         }
         #enterOverlay > div {
@@ -60,13 +68,8 @@
 
         /* --- Main Content Layout --- */
         #mainContent {
-            position: fixed; inset: 0;
-            display: flex;
-            align-items: center;
-            z-index: 10;
-            opacity: 0;
-            pointer-events: none;
-            user-select: none;
+            position: fixed; inset: 0; display: flex; align-items: center;
+            z-index: 10; opacity: 0; pointer-events: none; user-select: none;
             animation: popInWithBlur 0.7s forwards ease-out;
             animation-play-state: paused;
         }
@@ -75,85 +78,43 @@
             to { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
         .content-block {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            display: flex; flex-direction: column; align-items: center;
             width: 100%;
         }
-        .text-info h1 {
-            font-size: 40px;
-            font-weight: 600;
-            margin: 0;
-            text-shadow: var(--username-glow);
-        }
-        .text-info h3 {
-            font-size: 24px;
-            font-weight: 570;
-            margin: 10px 0 0 0;
-        }
+        .text-info h1 { font-size: 50px; font-weight: 600; margin: 0; text-shadow: var(--username-glow); }
+        .text-info h3 { font-size: 24px; font-weight: 570; margin: 10px 0 0 0; }
         
         /* --- Icons --- */
-        .social-icons {
-            margin-top: 20px;
-            display: flex;
-            gap: 23px;
-        }
-        .social-icons a {
-            color: var(--text-color);
-            pointer-events: auto;
-            transition: transform 0.2s ease-out;
-        }
-        .social-icons a:hover {
-            transform: translateY(-3px);
-        }
-        .social-icons svg {
-            width: 40px;
-            height: 40px;
-        }
+        .social-icons { margin-top: 20px; display: flex; gap: 20px; }
+        .social-icons a { color: var(--text-color); pointer-events: auto; transition: transform 0.2s ease-out; }
+        .social-icons a:hover { transform: translateY(-3px); }
+        .social-icons svg { width: 35px; height: 35px; }
 
         /* --- View Counter --- */
         #view-counter-wrapper {
-            position: fixed;
-            left: 50%;
-            bottom: 35%;
+            position: fixed; left: 50%; bottom: 25%;
             transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 550;
-            font-size: 18px;
-            pointer-events: auto;
+            display: flex; align-items: center;
+            gap: 8px; font-weight: 550; font-size: 18px; pointer-events: auto;
             background: rgba(193,199,199,0.07);
             border: 2px solid rgba(193,199,199,0.15);
             border-radius: 12px;
             padding: 10px 16px;
         }
         
-        /* --- MOBILE COMPATIBILITY --- */
+        /* --- Mobile Adjustments --- */
         @media (max-width: 768px) {
-            * {
-                cursor: default !important; /* remove custom cursor on mobile */
-            }
-            .text-info h1 {
-                font-size: 32px; /* smaller title */
-            }
-            .text-info h3 {
-                font-size: 18px; /* smaller subtitle */
-            }
-            .social-icons svg {
-                width: 36px; /* slightly smaller icons */
-                height: 36px;
-            }
-            #view-counter-wrapper {
-                bottom: 5%; /* move counter down to avoid clipping */
-                padding: 8px 12px;
-                font-size: 16px;
-            }
+            * { cursor: default !important; }
+            .text-info h1 { font-size: 32px; }
+            .text-info h3 { font-size: 18px; }
+            .social-icons svg { width: 36px; height: 36px; }
+            #view-counter-wrapper { bottom: 5%; padding: 8px 12px; font-size: 16px; }
         }
     </style>
 </head>
 <body>
     <video id="backgroundVideo" loop playsinline muted src="https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4"></video>
+    <div id="gifBackground"></div>
     <div class="video-dim-overlay"></div>
     <div class="tv-effect-overlay"></div>
 
@@ -183,35 +144,34 @@
 <script>
     const enterOverlay = document.getElementById('enterOverlay');
     const backgroundVideo = document.getElementById('backgroundVideo');
+    const gifBackground = document.getElementById('gifBackground');
     const mainContent = document.getElementById('mainContent');
     const viewCounterWrapper = document.getElementById('view-counter-wrapper');
     const viewNumberElement = document.getElementById('view-number');
     let fetchedViewCount = '0';
     
-    // --- Touch Device Detection ---
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-    // Change text to "Tap" on mobile
     if (isTouchDevice) {
         document.querySelector('#enterOverlay > div').textContent = 'Tap <3';
+        gifBackground.style.display = 'block';
+        if (backgroundVideo) {
+            backgroundVideo.remove();
+        }
     }
 
     function startSite() {
-    enterOverlay.style.display = 'none';
-    if (backgroundVideo) {
-        // First, unmute and tell the video to play
-        backgroundVideo.muted = false;
-        backgroundVideo.play().catch(error => console.error("Video failed to play:", error));
-
-        // After a very short delay (50ms), FORCE the volume change.
-        setTimeout(() => {
-            backgroundVideo.volume = 0.00; // Set your desired volume here (e.g., 25%)
-            console.log('Video volume has been set to:', backgroundVideo.volume); // Proof it ran
-        }, 50); 
+        enterOverlay.style.display = 'none';
+        if (backgroundVideo) {
+            backgroundVideo.muted = false;
+            setTimeout(() => {
+                backgroundVideo.volume = 0.25;
+            }, 50);
+            backgroundVideo.play().catch(error => console.error("Video failed to play:", error));
+        }
+        mainContent.style.animationPlayState = 'running';
+        mainContent.style.pointerEvents = 'auto';
     }
-    mainContent.style.animationPlayState = 'running';
-    mainContent.style.pointerEvents = 'auto';
-}
     
     if (enterOverlay) {
         enterOverlay.addEventListener('click', startSite);
@@ -250,7 +210,6 @@
             });
     }
 
-    // Disable hover effect on touch devices to prevent "sticky hover"
     if (!isTouchDevice && viewCounterWrapper) {
         viewCounterWrapper.addEventListener('mouseover', () => {
             if (viewNumberElement) viewNumberElement.textContent = 'YouTube Views';
@@ -263,7 +222,3 @@
 
 </body>
 </html>
-
-
-
-
