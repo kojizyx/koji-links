@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf--8"/>
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
     
     <link rel="icon" type="image/png" href="https://i.imgur.com/LpH1VuP.png"/>
@@ -34,11 +34,11 @@
             top: 0; left: 0;
             width: 100%; height: 100%;
             object-fit: cover;
-            z-index: -3; /* Deepest layer */
+            z-index: -3;
         }
         .video-dim-overlay {
             position: fixed; inset: 0; z-index: -2; pointer-events: none;
-            background: rgba(0,0,0,0.25); /* Dims the video */
+            background: rgba(0,0,0,0.25);
         }
         .tv-effect-overlay {
             position: fixed; inset: 0; z-index: -1; pointer-events: none;
@@ -47,47 +47,47 @@
         #enterOverlay {
             position: fixed; inset: 0; z-index: 100;
             display: flex; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.80); /* Dimmed to 75% */
-            backdrop-filter: blur(10px); /* Super blurie */
+            background: rgba(0,0,0,0.80);
+            backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             font-weight: 700;
         }
         #enterOverlay > div {
-    font-size: 30px;
-    color: #FFFFFF;           /* This makes the base text pure white */
-    text-shadow: 0 0 15px #FFFFFF; /* This makes the glow pure white */
-}
+            font-size: 30px;
+            color: #FFFFFF;
+            text-shadow: 0 0 15px #FFFFFF;
+        }
 
         /* --- Main Content Layout --- */
         #mainContent {
             position: fixed; inset: 0;
             display: flex;
-            align-items: center; /* Vertically centers the content block */
+            align-items: center;
             z-index: 10;
             opacity: 0;
             pointer-events: none;
             user-select: none;
             animation: popInWithBlur 0.7s forwards ease-out;
-            animation-play-state: paused; /* waits for JS */
+            animation-play-state: paused;
         }
         @keyframes popInWithBlur {
             from { opacity: 0; transform: translateY(-10px); filter: blur(5px); }
             to { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
         .content-block {
-    display: flex;
-    flex-direction: column; /* Stack items vertically (h1, h3, icons) */
-    align-items: center;   /* Center all items horizontally */
-    width: 100%;
-}
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
         .text-info h1 {
-            font-size: 40px; /* 25% bigger */
+            font-size: 40px;
             font-weight: 600;
             margin: 0;
             text-shadow: var(--username-glow);
         }
         .text-info h3 {
-            font-size: 24px; /* 25% bigger */
+            font-size: 24px;
             font-weight: 570;
             margin: 10px 0 0 0;
         }
@@ -107,7 +107,7 @@
             transform: translateY(-3px);
         }
         .social-icons svg {
-            width: 40px; /* 25% bigger */
+            width: 40px;
             height: 40px;
         }
 
@@ -115,18 +115,40 @@
         #view-counter-wrapper {
             position: fixed;
             left: 50%;
-            bottom: 35%; /* Up from the floor */
-            transform: translateX(-50%); /* Centered horizontally */
+            bottom: 35%;
+            transform: translateX(-50%);
             display: flex;
             align-items: center;
             gap: 8px;
             font-weight: 550;
-            font-size: 18px; /* 25% bigger */
+            font-size: 18px;
             pointer-events: auto;
             background: rgba(193,199,199,0.07);
             border: 2px solid rgba(193,199,199,0.15);
             border-radius: 12px;
             padding: 10px 16px;
+        }
+        
+        /* --- MOBILE COMPATIBILITY --- */
+        @media (max-width: 768px) {
+            * {
+                cursor: default !important; /* remove custom cursor on mobile */
+            }
+            .text-info h1 {
+                font-size: 32px; /* smaller title */
+            }
+            .text-info h3 {
+                font-size: 18px; /* smaller subtitle */
+            }
+            .social-icons svg {
+                width: 36px; /* slightly smaller icons */
+                height: 36px;
+            }
+            #view-counter-wrapper {
+                bottom: 5%; /* move counter down to avoid clipping */
+                padding: 8px 12px;
+                font-size: 16px;
+            }
         }
     </style>
 </head>
@@ -165,17 +187,25 @@
     const viewCounterWrapper = document.getElementById('view-counter-wrapper');
     const viewNumberElement = document.getElementById('view-number');
     let fetchedViewCount = '0';
+    
+    // --- Touch Device Detection ---
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-   function startSite() {
-    enterOverlay.style.display = 'none';
-    if (backgroundVideo) {
-        backgroundVideo.muted = false;
-        backgroundVideo.volume = 0.6; // This sets the volume to 20%
-        backgroundVideo.play().catch(error => console.error("Video failed to play:", error));
+    // Change text to "Tap" on mobile
+    if (isTouchDevice) {
+        document.querySelector('#enterOverlay > div').textContent = 'Tap <3';
     }
-    mainContent.style.animationPlayState = 'running';
-    mainContent.style.pointerEvents = 'auto';
-}
+
+    function startSite() {
+        enterOverlay.style.display = 'none';
+        if (backgroundVideo) {
+            backgroundVideo.muted = false;
+            backgroundVideo.volume = 0.6;
+            backgroundVideo.play().catch(error => console.error("Video failed to play:", error));
+        }
+        mainContent.style.animationPlayState = 'running';
+        mainContent.style.pointerEvents = 'auto';
+    }
     
     if (enterOverlay) {
         enterOverlay.addEventListener('click', startSite);
@@ -214,7 +244,8 @@
             });
     }
 
-    if(viewCounterWrapper) {
+    // Disable hover effect on touch devices to prevent "sticky hover"
+    if (!isTouchDevice && viewCounterWrapper) {
         viewCounterWrapper.addEventListener('mouseover', () => {
             if (viewNumberElement) viewNumberElement.textContent = 'YouTube Views';
         });
@@ -226,6 +257,3 @@
 
 </body>
 </html>
-
-
-
