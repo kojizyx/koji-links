@@ -90,7 +90,7 @@
         .social-icons svg { width: 35px; height: 35px; }
 
         /* --- View Counter --- */
-        #view-counter-container { /* new wrapper for counter and label */
+        #view-counter-container {
             position: fixed; left: 50%; bottom: 25%;
             transform: translateX(-50%);
             display: flex; flex-direction: column; align-items: center;
@@ -104,7 +104,7 @@
             border-radius: 12px;
             padding: 10px 16px;
         }
-        .mobile-view-label { /* the new label, hidden by default */
+        .mobile-view-label {
             display: none;
             margin-top: 6px;
             font-size: 12px;
@@ -118,9 +118,9 @@
             .text-info h1 { font-size: 32px; }
             .text-info h3 { font-size: 18px; }
             .social-icons svg { width: 36px; height: 36px; }
-            #view-counter-container { bottom: 5%; } /* reposition the whole block */
+            #view-counter-container { bottom: 5%; }
             #view-counter-wrapper { padding: 8px 12px; font-size: 16px; }
-            .mobile-view-label { display: block; } /* show the label */
+            .mobile-view-label { display: block; }
         }
     </style>
 </head>
@@ -145,7 +145,6 @@
                 </a>
             </div>
         </div>
-        <!-- The new HTML structure for the view counter -->
         <div id="view-counter-container">
             <div id="view-counter-wrapper">
                 <svg height="1em" viewBox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5" fill="currentColor"></path></svg>
@@ -158,82 +157,85 @@
     <div id="enterOverlay"><div>Click &lt;3</div></div>
 
 <script>
-    const enterOverlay = document.getElementById('enterOverlay');
-    const backgroundVideo = document.getElementById('backgroundVideo');
-    const gifBackground = document.getElementById('gifBackground');
-    const mainContent = document.getElementById('mainContent');
-    const viewCounterWrapper = document.getElementById('view-counter-wrapper');
-    const viewNumberElement = document.getElementById('view-number');
-    let fetchedViewCount = '0';
-    
-    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    // this wrapper fixes the mobile audio bug
+    document.addEventListener('DOMContentLoaded', () => {
+        const enterOverlay = document.getElementById('enterOverlay');
+        const backgroundVideo = document.getElementById('backgroundVideo');
+        const gifBackground = document.getElementById('gifBackground');
+        const mainContent = document.getElementById('mainContent');
+        const viewCounterWrapper = document.getElementById('view-counter-wrapper');
+        const viewNumberElement = document.getElementById('view-number');
+        let fetchedViewCount = '0';
+        
+        const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-    if (isTouchDevice) {
-        document.querySelector('#enterOverlay > div').textContent = 'Tap <3';
-        gifBackground.style.display = 'block';
-        if (backgroundVideo) {
-            backgroundVideo.remove();
+        if (isTouchDevice) {
+            document.querySelector('#enterOverlay > div').textContent = 'Tap <3';
+            gifBackground.style.display = 'block';
+            if (backgroundVideo) {
+                backgroundVideo.remove();
+            }
         }
-    }
 
-    function startSite() {
-        enterOverlay.style.display = 'none';
-        if (backgroundVideo) {
-            backgroundVideo.muted = false;
-            setTimeout(() => {
-                backgroundVideo.volume = 0.25;
-            }, 50);
-            backgroundVideo.play().catch(error => console.error("Video failed to play:", error));
+        function startSite() {
+            enterOverlay.style.display = 'none';
+            if (backgroundVideo) {
+                backgroundVideo.muted = false;
+                setTimeout(() => {
+                    backgroundVideo.volume = 0.25;
+                }, 50);
+                backgroundVideo.play().catch(error => console.error("Video failed to play:", error));
+            }
+            mainContent.style.animationPlayState = 'running';
+            mainContent.style.pointerEvents = 'auto';
         }
-        mainContent.style.animationPlayState = 'running';
-        mainContent.style.pointerEvents = 'auto';
-    }
-    
-    if (enterOverlay) {
-        enterOverlay.addEventListener('click', startSite);
-    }
+        
+        if (enterOverlay) {
+            enterOverlay.addEventListener('click', startSite);
+        }
 
-    (function() {
-        const word = "@koji";
-        let i = 0; let forward = true;
-        setInterval(() => {
-            if (forward) { i++; if (i === word.length) forward = false; } 
-            else { i--; if (i === 1) forward = true; }
-            document.title = word.substring(0, i);
-        }, 400);
-    })();
+        (function() {
+            const word = "@koji";
+            let i = 0; let forward = true;
+            setInterval(() => {
+                if (forward) { i++; if (i === word.length) forward = false; } 
+                else { i--; if (i === 1) forward = true; }
+                document.title = word.substring(0, i);
+            }, 400);
+        })();
 
-    const apiKey = 'AIzaSyCTVfiag9MBGkifvzMzbx74KWbvATwj3V8';
-    const channelId = 'UC3IG4vAafVfkfSRufBy3sJw';
+        const apiKey = 'AIzaSyCTVfiag9MBGkifvzMzbx74KWbvATwj3V8';
+        const channelId = 'UC3IG4vAafVfkfSRufBy3sJw';
 
-    if (viewNumberElement) {
-        fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelId}&key=${apiKey}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.items && data.items.length > 0) {
-                    const views = data.items[0].statistics.viewCount;
-                    fetchedViewCount = parseInt(views).toLocaleString();
-                    viewNumberElement.textContent = fetchedViewCount;
-                } else {
-                    fetchedViewCount = 'Error';
-                    viewNumberElement.textContent = 'Error';
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching YouTube data:', error);
-                fetchedViewCount = 'N/A';
-                viewNumberElement.textContent = 'N/A';
+        if (viewNumberElement) {
+            fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelId}&key=${apiKey}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.items && data.items.length > 0) {
+                        const views = data.items[0].statistics.viewCount;
+                        fetchedViewCount = parseInt(views).toLocaleString();
+                        viewNumberElement.textContent = fetchedViewCount;
+                    } else {
+                        fetchedViewCount = 'Error';
+                        viewNumberElement.textContent = 'Error';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching YouTube data:', error);
+                    fetchedViewCount = 'N/A';
+                    viewNumberElement.textContent = 'N/A';
+                });
+        }
+
+        if (!isTouchDevice && viewCounterWrapper) {
+            viewCounterWrapper.addEventListener('mouseover', () => {
+                if (viewNumberElement) viewNumberElement.textContent = 'YouTube Views';
             });
-    }
-
-    if (!isTouchDevice && viewCounterWrapper) {
-        viewCounterWrapper.addEventListener('mouseover', () => {
-            if (viewNumberElement) viewNumberElement.textContent = 'YouTube Views';
-        });
-        viewCounterWrapper.addEventListener('mouseout', () => {
-            if (viewNumberElement) viewNumberElement.textContent = fetchedViewCount;
-        });
-    }
+            viewCounterWrapper.addEventListener('mouseout', () => {
+                if (viewNumberElement) viewNumberElement.textContent = fetchedViewCount;
+            });
+        }
+    });
 </script>
 
 </body>
