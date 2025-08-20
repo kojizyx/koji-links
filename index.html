@@ -166,15 +166,16 @@
     const viewNumberElement = document.getElementById('view-number');
     let fetchedViewCount = '0';
 
-    function startSite() {
-        enterOverlay.style.display = 'none';
-        if (backgroundVideo) {
-            backgroundVideo.muted = false;
-            backgroundVideo.play().catch(error => console.error("Video failed to play:", error));
-        }
-        mainContent.style.animationPlayState = 'running';
-        mainContent.style.pointerEvents = 'auto';
+   function startSite() {
+    enterOverlay.style.display = 'none';
+    if (backgroundVideo) {
+        backgroundVideo.muted = false;
+        backgroundVideo.volume = 0.6; // This sets the volume to 20%
+        backgroundVideo.play().catch(error => console.error("Video failed to play:", error));
     }
+    mainContent.style.animationPlayState = 'running';
+    mainContent.style.pointerEvents = 'auto';
+}
     
     if (enterOverlay) {
         enterOverlay.addEventListener('click', startSite);
@@ -225,5 +226,6 @@
 
 </body>
 </html>
+
 
 
