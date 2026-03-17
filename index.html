@@ -53,14 +53,14 @@
         }
 
         #yt iframe {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 100vw;
-            height: 56.25vw;
-            min-width: 177.78vh;
-            min-height: 100vh;
-            transform: translate(-50%, -50%);
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            width: 100vw !important;
+            height: 56.25vw !important;
+            min-width: 177.78vh !important;
+            min-height: 100vh !important;
+            transform: translate(-50%, -50%) scale(1.08) !important;
             filter: saturate(0.95) contrast(1.05);
         }
         
@@ -268,6 +268,7 @@
         const useyt = !touch && Math.random() < 0.6
 
         let ytplayer = null
+        let ytok = false
         
         // device setup
         if (touch) {
@@ -291,7 +292,55 @@
         // preload
         if (!touch) {
             if (useyt) {
-                loadytapi().catch(() => {})
+                loadytapi().then(() => {
+                    unloadbg()
+                    if (bg) {
+                        bg.style.opacity = '0'
+                        bg.style.display = 'none'
+                    }
+
+                    ytplayer = new window.YT.Player('yt', {
+                        playerVars: {
+                            autoplay: 1,
+                            controls: 0,
+                            disablekb: 1,
+                            fs: 0,
+                            iv_load_policy: 3,
+                            modestbranding: 1,
+                            playsinline: 1,
+                            rel: 0,
+                            showinfo: 0,
+                            mute: 1,
+                            loop: 1,
+                            listType: 'playlist',
+                            list: playlist,
+                        },
+                        events: {
+                            onReady: e => {
+                                try {
+                                    ytok = true
+                                    e.target.setVolume(0)
+                                    try { e.target.setShuffle(true) } catch {}
+                                    try {
+                                        const pl = e.target.getPlaylist() || []
+                                        if (pl.length) e.target.playVideoAt(Math.floor(Math.random() * pl.length))
+                                        else e.target.playVideo()
+                                    } catch {
+                                        e.target.playVideo()
+                                    }
+                                } catch {}
+                            },
+                            onStateChange: e => {
+                                if (e.data === window.YT.PlayerState.PLAYING) {
+                                    try {
+                                        const d = e.target.getDuration()
+                                        if (d && d < 60) e.target.nextVideo()
+                                    } catch {}
+                                }
+                            },
+                        },
+                    })
+                }).catch(() => {})
             } else {
                 ensurebg()
                 try { bg.load() } catch {}
@@ -377,36 +426,33 @@
 
             if (!touch) {
                 if (useyt) {
-                    unloadbg()
-                    if (bg) {
-                        bg.style.opacity = '0'
-                        setTimeout(() => bg.style.display = 'none', 260)
-                    }
                     yt.style.opacity = '1'
-                    startyt().then(ok => {
-                        if (!ok) {
-                            yt.style.opacity = '0'
-                            if (bg) {
-                                bg.style.display = 'block'
-                                bg.style.opacity = '1'
+                    if (ytplayer && ytok) {
+                        try { ytplayer.unMute() } catch {}
+                        try { ytplayer.setVolume(0) } catch {}
+                        fadevolume(v => { try { ytplayer.setVolume(v) } catch {} }, 0, 40, 450)
+                    } else {
+                        startyt().then(ok => {
+                            if (!ok) {
+                                yt.style.opacity = '0'
+                                if (bg) {
+                                    bg.style.display = 'block'
+                                    bg.style.opacity = '1'
+                                }
+                                bg.muted = false
+                                bg.volume = 0
+                                ensurebg()
+                                bg.play().then(() => fadevolume(v => bg.volume = v, 0, 0.4, 700)).catch(() => {})
                             }
-                            bg.muted = false
-                            bg.volume = 0
-                            ensurebg()
-                            bg.play().then(() => fadevolume(v => bg.volume = v, 0, 0.4, 700)).catch(() => {})
-                        } else {
-                            if (bg) {
-                                bg.muted = true
-                                bg.style.display = 'none'
-                            }
-                        }
-                    })
+                        })
+                    }
                 } else {
                     yt.style.opacity = '0'
                     if (ytplayer) {
                         try { ytplayer.stopVideo() } catch {}
                         try { ytplayer.destroy() } catch {}
                         ytplayer = null
+                        ytok = false
                     }
                     if (bg) bg.style.display = 'block'
                     ensurebg()
