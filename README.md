@@ -1,6 +1,5 @@
 # koji
- 
- ## just my "site". i upload when i feel like it.
+ - just my "site". i upload when i feel like it.
  
  ## stuff it does
  - title does the typing thing
