@@ -56,10 +56,10 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 160vw;
-            height: 90vw;
-            min-width: 160vh;
-            min-height: 90vh;
+            width: 100vw;
+            height: 56.25vw;
+            min-width: 177.78vh;
+            min-height: 100vh;
             transform: translate(-50%, -50%);
             filter: saturate(0.95) contrast(1.05);
         }
@@ -288,6 +288,16 @@
             try { bg.load() } catch {}
         }
 
+        // preload
+        if (!touch) {
+            if (useyt) {
+                loadytapi().catch(() => {})
+            } else {
+                ensurebg()
+                try { bg.load() } catch {}
+            }
+        }
+
         function fadevolume(set, from, to, ms) {
             const start = performance.now()
             function step(now) {
@@ -446,11 +456,19 @@
             const m2 = t.match(/\"viewCountText\"\s*:\s*\{[^}]*\"simpleText\"\s*:\s*\"([^\"]+)\"/i)
             if (m2 && /views/i.test(m2[1])) return m2[1].replace(/views/i, '').trim()
 
+            const m3 = t.match(/\"viewCountText\"\s*:\s*\{[^}]*\"runs\"\s*:\s*\[\s*\{[^}]*\"text\"\s*:\s*\"([^\"]+)\"/i)
+            if (m3 && /views/i.test(m3[1])) return m3[1].replace(/views/i, '').trim()
+
             return ''
         }
 
         function fetchviews(url) {
-            return fetch(url).then(r => r.text()).then(t => parseviews(t))
+            const c = new AbortController()
+            const to = setTimeout(() => c.abort(), 6000)
+            return fetch(url, { signal: c.signal })
+                .then(r => r.text())
+                .then(t => parseviews(t))
+                .finally(() => clearTimeout(to))
         }
 
         fetchviews(`https://r.jina.ai/https://www.youtube.com/@Koji_z/about`)
