@@ -38,6 +38,20 @@
             height: 100%;
             object-fit: cover;
             z-index: -2;
+            will-change: transform;
+        }
+
+        #yt {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        #yt iframe {
+            width: 100%;
+            height: 100%;
         }
         
         #gif {
@@ -65,6 +79,7 @@
             background: repeating-linear-gradient(rgba(0,0,0,0.5) 0, rgba(0,0,0,0.5) 1px, transparent 1px, transparent 2px);
             z-index: -1;
             pointer-events: none;
+            opacity: 0.35;
         }
         
         #enter {
@@ -138,12 +153,28 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            background: rgba(193,199,199,0.07);
-            border: 2px solid rgba(193,199,199,0.15);
-            border-radius: 12px;
-            padding: 10px 16px;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(193,199,199,0.14);
+            border-radius: 999px;
+            padding: 9px 14px;
             font-weight: 550;
             font-size: 18px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+            transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+        }
+
+        .views-box:hover {
+            transform: translateY(-2px);
+            border-color: rgba(193,199,199,0.24);
+            background: rgba(0,0,0,0.45);
+        }
+
+        .views-box svg {
+            width: 18px;
+            height: 18px;
+            opacity: 0.9;
         }
         
         .views-label {
@@ -160,6 +191,7 @@
             .views { bottom: 5%; }
             .views-box { padding: 8px 12px; font-size: 16px; }
             .views-label { display: block; }
+            .scan { display: none; }
         }
         
         @keyframes fadein {
@@ -173,7 +205,8 @@
     </style>
 </head>
 <body>
-    <video id="bg" loop muted playsinline></video>
+    <video id="bg" loop muted playsinline preload="none" src=""></video>
+    <div id="yt" aria-hidden="true"></div>
     <div id="gif"></div>
     <div class="dim"></div>
     <div class="scan"></div>
@@ -216,27 +249,166 @@
         const gif = document.getElementById('gif')
         const count = document.getElementById('count')
         const viewsBox = document.querySelector('.views-box')
+        const yt = document.getElementById('yt')
         
         let realCount = '0'
         const touch = 'ontouchstart' in window
+
+        const ytkey = 'AIzaSyCTVfiag9MBGkifvzMzbx74KWbvATwj3V8'
+        const playlist = 'PLFeE4sLplXslCiSt5KUCyT0Da73CkbxFM'
+        const useyt = !touch && Math.random() < 0.7
+
+        let ytplayer = null
         
         // device setup
         if (touch) {
             enter.textContent = 'tap &lt;3'
             gif.style.display = 'block'
             bg.remove()
-        } else {
-            bg.src = 'https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4'
+        }
+
+        function ensurebg() {
+            if (!bg) return
+            if (!bg.src) bg.src = 'https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4'
+        }
+
+        function parseiso(s) {
+            const m = s.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
+            if (!m) return 0
+            const h = parseInt(m[1] || '0')
+            const min = parseInt(m[2] || '0')
+            const sec = parseInt(m[3] || '0')
+            return h * 3600 + min * 60 + sec
+        }
+
+        async function pickvideo() {
+            const items = []
+            let token = ''
+
+            while (items.length < 50) {
+                const u = new URL('https://www.googleapis.com/youtube/v3/playlistItems')
+                u.searchParams.set('part', 'contentDetails')
+                u.searchParams.set('maxResults', '50')
+                u.searchParams.set('playlistId', playlist)
+                u.searchParams.set('key', ytkey)
+                if (token) u.searchParams.set('pageToken', token)
+
+                const r = await fetch(u)
+                const d = await r.json()
+                if (!d.items) break
+                for (const it of d.items) {
+                    if (it.contentDetails?.videoId) items.push(it.contentDetails.videoId)
+                }
+                token = d.nextPageToken || ''
+                if (!token) break
+            }
+
+            for (let tries = 0; tries < 8; tries++) {
+                const chunk = []
+                while (chunk.length < 30 && items.length) {
+                    const id = items[Math.floor(Math.random() * items.length)]
+                    if (!chunk.includes(id)) chunk.push(id)
+                }
+
+                const u = new URL('https://www.googleapis.com/youtube/v3/videos')
+                u.searchParams.set('part', 'contentDetails')
+                u.searchParams.set('id', chunk.join(','))
+                u.searchParams.set('key', ytkey)
+
+                const r = await fetch(u)
+                const d = await r.json()
+                const ok = (d.items || [])
+                    .map(v => ({ id: v.id, dur: parseiso(v.contentDetails?.duration || '') }))
+                    .filter(v => v.dur >= 60)
+
+                if (ok.length) return ok[Math.floor(Math.random() * ok.length)].id
+            }
+
+            return ''
+        }
+
+        function loadytapi() {
+            return new Promise(resolve => {
+                if (window.YT && window.YT.Player) return resolve()
+                const s = document.createElement('script')
+                s.src = 'https://www.youtube.com/iframe_api'
+                window.onYouTubeIframeAPIReady = () => resolve()
+                document.head.appendChild(s)
+            })
+        }
+
+        async function startyt() {
+            try {
+                const id = await pickvideo()
+                if (!id) return false
+
+                await loadytapi()
+
+                yt.style.opacity = '1'
+                ytplayer = new window.YT.Player('yt', {
+                    videoId: id,
+                    playerVars: {
+                        autoplay: 1,
+                        controls: 0,
+                        disablekb: 1,
+                        fs: 0,
+                        iv_load_policy: 3,
+                        modestbranding: 1,
+                        playsinline: 1,
+                        rel: 0,
+                        showinfo: 0,
+                        mute: 0,
+                        loop: 1,
+                        playlist: id,
+                    },
+                    events: {
+                        onReady: e => {
+                            try {
+                                e.target.setVolume(40)
+                                e.target.playVideo()
+                            } catch {}
+                        },
+                        onStateChange: e => {
+                            if (e.data === window.YT.PlayerState.ENDED) {
+                                try { e.target.seekTo(0, true); e.target.playVideo() } catch {}
+                            }
+                        },
+                    },
+                })
+
+                return true
+            } catch {
+                return false
+            }
         }
         
         // start site
         function start() {
             enter.style.display = 'none'
-            if (bg && !touch) {
-                bg.muted = false
-                setTimeout(() => bg.volume = 0.25, 50)
-                bg.play()
+
+            if (!touch) {
+                if (useyt) {
+                    if (bg) {
+                        bg.pause()
+                        bg.muted = true
+                    }
+                    startyt().then(ok => {
+                        if (!ok) {
+                            yt.style.opacity = '0'
+                            ensurebg()
+                            bg.muted = false
+                            setTimeout(() => bg.volume = 0.25, 50)
+                            bg.play().catch(() => {})
+                        }
+                    })
+                } else {
+                    ensurebg()
+                    bg.muted = false
+                    setTimeout(() => bg.volume = 0.25, 50)
+                    bg.play().catch(() => {})
+                }
             }
+
             main.classList.add('show')
             main.style.pointerEvents = 'auto'
         }
