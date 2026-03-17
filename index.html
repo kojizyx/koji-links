@@ -64,7 +64,6 @@
             min-width: 177.78vh !important;
             min-height: 100vh !important;
             transform: translate(-50%, -50%) scale(1.08) !important;
-            filter: saturate(0.95) contrast(1.05);
         }
         
         #gif {
@@ -226,7 +225,7 @@
     </style>
 </head>
 <body>
-    <video id="bg" loop muted playsinline></video>
+    <video id="bg" playsinline preload="auto" src="https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4"></video>
     
     <div id="yt-wrap" aria-hidden="true">
         <div id="yt-player"></div>
@@ -272,12 +271,11 @@
         
         let realCount = '...'
         const touch = 'ontouchstart' in window
-
         const playlist = 'PLFeE4sLplXslCiSt5KUCyT0Da73CkbxFM'
-        const useyt = !touch && Math.random() < 0.6
 
         let ytplayer = null
         let ytok = false
+        let activevid = '' // tracks if yt or mp4 is playing
         
         // device setup
         if (touch) {
@@ -286,21 +284,22 @@
             bg.remove()
         }
 
-        // preload yt
-        if (!touch && useyt) {
-            loadytapi().then(() => {
+        // preload yt in background instantly
+        if (!touch) {
+            const s = document.createElement('script')
+            s.src = 'https://www.youtube.com/iframe_api'
+            window.onYouTubeIframeAPIReady = () => {
                 ytplayer = new window.YT.Player('yt-player', {
                     playerVars: {
                         autoplay: 1, controls: 0, disablekb: 1, fs: 0, 
                         iv_load_policy: 3, modestbranding: 1, playsinline: 1, 
-                        rel: 0, showinfo: 0, mute: 1, listType: 'playlist', list: playlist,
+                        rel: 0, showinfo: 0, mute: 1, vq: 'hd1080', 
+                        listType: 'playlist', list: playlist,
                     },
                     events: {
                         onReady: e => {
                             ytok = true
                             e.target.setVolume(0)
-                            
-                            // delay shuffle so playlist actually loads first to stop black screen
                             setTimeout(() => {
                                 try {
                                     e.target.setShuffle(true)
@@ -309,14 +308,37 @@
                             }, 500)
                         },
                         onStateChange: e => {
-                            // 0 means ended. play next video.
-                            if (e.data === 0) {
-                                try { e.target.nextVideo() } catch {}
+                            // 1 is playing, 3 is buffering
+                            if (e.data === 1 || e.data === 3) {
+                                try { e.target.setPlaybackQuality('hd1080') } catch {}
+                            }
+
+                            if (e.data === 1) { // playing
+                                try {
+                                    const d = e.target.getDuration()
+                                    // block shorts (anything under 61 seconds)
+                                    if (d && d < 61) e.target.nextVideo()
+                                } catch {}
+                            }
+
+                            if (e.data === 0) { // ended
+                                if (activevid === 'yt') {
+                                    // 35% chance mp4, 65% next yt
+                                    if (Math.random() < 0.35) {
+                                        playmp4()
+                                    } else {
+                                        try { e.target.nextVideo() } catch {}
+                                    }
+                                }
                             }
                         },
                     },
                 })
-            }).catch(() => {})
+            }
+            document.head.appendChild(s)
+
+            // 100% chance yt when mp4 ends
+            bg.addEventListener('ended', playyt)
         }
 
         function fadevolume(set, from, to, ms) {
@@ -329,14 +351,40 @@
             requestAnimationFrame(step)
         }
 
-        function loadytapi() {
-            return new Promise(resolve => {
-                if (window.YT && window.YT.Player) return resolve()
-                const s = document.createElement('script')
-                s.src = 'https://www.youtube.com/iframe_api'
-                window.onYouTubeIframeAPIReady = () => resolve()
-                document.head.appendChild(s)
-            })
+        function playyt() {
+            if (!ytok) return playmp4()
+            activevid = 'yt'
+            
+            // fade out mp4
+            fadevolume(v => bg.volume = v, 0.4, 0, 700)
+            bg.style.opacity = '0'
+            setTimeout(() => { if (activevid === 'yt') bg.pause() }, 700)
+            
+            // fade in yt
+            ytWrap.style.opacity = '1'
+            try { 
+                ytplayer.playVideo()
+                ytplayer.unMute() 
+                fadevolume(v => ytplayer.setVolume(v), 0, 40, 700) 
+            } catch {}
+        }
+
+        function playmp4() {
+            activevid = 'mp4'
+            
+            // fade out yt
+            if (ytok && ytplayer) {
+                fadevolume(v => ytplayer.setVolume(v), 40, 0, 700)
+                ytWrap.style.opacity = '0'
+                setTimeout(() => { if (activevid === 'mp4') ytplayer.pauseVideo() }, 700)
+            }
+            
+            // fade in mp4
+            bg.currentTime = 0
+            bg.play().then(() => {
+                bg.style.opacity = '1'
+                fadevolume(v => bg.volume = v, 0, 0.4, 700)
+            }).catch(() => {})
         }
 
         // start site
@@ -344,25 +392,11 @@
             enter.style.display = 'none'
 
             if (!touch) {
-                if (useyt && ytok && ytplayer) {
-                    ytWrap.style.opacity = '1'
-                    try { 
-                        ytplayer.playVideo()
-                        ytplayer.unMute() 
-                        fadevolume(v => ytplayer.setVolume(v), 0, 40, 700) 
-                    } catch {}
+                // starting roll: 65% chance yt, 35% chance mp4
+                if (Math.random() < 0.65 && ytok) {
+                    playyt()
                 } else {
-                    ytWrap.style.opacity = '0'
-                    if (bg) {
-                        bg.src = 'https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4'
-                        bg.style.display = 'block'
-                        bg.muted = false
-                        bg.volume = 0
-                        bg.play().then(() => {
-                            bg.style.opacity = '1'
-                            fadevolume(v => bg.volume = v, 0, 0.4, 700)
-                        }).catch(() => {})
-                    }
+                    playmp4()
                 }
             }
 
