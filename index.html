@@ -256,7 +256,7 @@
 
         const ytkey = 'AIzaSyCTVfiag9MBGkifvzMzbx74KWbvATwj3V8'
         const playlist = 'PLFeE4sLplXslCiSt5KUCyT0Da73CkbxFM'
-        const useyt = !touch && Math.random() < 0.7
+        const useyt = !touch && Math.random() < 0.6
 
         let ytplayer = null
         
@@ -344,7 +344,7 @@
 
                 await loadytapi()
 
-                yt.style.opacity = '1'
+                yt.style.opacity = '0.001'
                 ytplayer = new window.YT.Player('yt', {
                     videoId: id,
                     playerVars: {
@@ -387,22 +387,22 @@
             enter.style.display = 'none'
 
             if (!touch) {
+                ensurebg()
+                bg.muted = true
+                bg.play().catch(() => {})
+
                 if (useyt) {
-                    if (bg) {
-                        bg.pause()
-                        bg.muted = true
-                    }
                     startyt().then(ok => {
                         if (!ok) {
                             yt.style.opacity = '0'
-                            ensurebg()
                             bg.muted = false
                             setTimeout(() => bg.volume = 0.25, 50)
                             bg.play().catch(() => {})
+                        } else {
+                            bg.muted = true
                         }
                     })
                 } else {
-                    ensurebg()
                     bg.muted = false
                     setTimeout(() => bg.volume = 0.25, 50)
                     bg.play().catch(() => {})
@@ -434,21 +434,33 @@
         // youtube views
         const key = 'AIzaSyCTVfiag9MBGkifvzMzbx74KWbvATwj3V8'
         const id = 'UC3IG4vAafVfkfSRufBy3sJw'
-        
+
+        function setviews(v) {
+            realCount = v
+            count.textContent = v
+        }
+
         fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${id}&key=${key}`)
-            .then(r => r.json())
+            .then(r => {
+                if (r.status === 403) throw new Error('forbidden')
+                return r.json()
+            })
             .then(d => {
                 if (d.items?.[0]) {
-                    realCount = parseInt(d.items[0].statistics.viewCount).toLocaleString()
-                    count.textContent = realCount
+                    setviews(parseInt(d.items[0].statistics.viewCount).toLocaleString())
                 } else {
-                    realCount = 'error'
-                    count.textContent = 'error'
+                    throw new Error('bad')
                 }
             })
             .catch(() => {
-                realCount = 'n/a'
-                count.textContent = 'n/a'
+                fetch(`https://www.youtube.com/channel/${id}/about`)
+                    .then(r => r.text())
+                    .then(t => {
+                        const m = t.match(/([0-9][0-9,\.\s]*)\s*views/i)
+                        if (m) setviews(m[1].replace(/\s/g, ''))
+                        else setviews('n/a')
+                    })
+                    .catch(() => setviews('n/a'))
             })
         
         // hover
