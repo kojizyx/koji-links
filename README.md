@@ -1,5 +1,8 @@
-simple guns.lol clone for my yt linktree
-
-https://kojizyx.github.io/koji-links/
-
-minimal undercase style - no ai vibe
+# koji
+ 
+ ## just my "site". i upload when i feel like it.
+ 
+ ## stuff it does
+ - title does the typing thing
+ - background video (mobile gets a gif)
+ - pulls live youtube views
