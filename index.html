@@ -39,6 +39,7 @@
             object-fit: cover;
             z-index: -2;
             will-change: transform;
+            transition: opacity 250ms ease;
         }
 
         #yt {
@@ -47,11 +48,20 @@
             z-index: -2;
             pointer-events: none;
             opacity: 0;
+            overflow: hidden;
+            transition: opacity 250ms ease;
         }
 
         #yt iframe {
-            width: 100%;
-            height: 100%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 160vw;
+            height: 90vw;
+            min-width: 160vh;
+            min-height: 90vh;
+            transform: translate(-50%, -50%);
+            filter: saturate(0.95) contrast(1.05);
         }
         
         #gif {
@@ -207,7 +217,6 @@
 <body>
     <video id="bg" loop muted playsinline preload="none"></video>
     <div id="yt" aria-hidden="true"></div>
-    <audio id="music" preload="none"></audio>
     <div id="gif"></div>
     <div class="dim"></div>
     <div class="scan"></div>
@@ -251,14 +260,12 @@
         const count = document.getElementById('count')
         const viewsBox = document.querySelector('.views-box')
         const yt = document.getElementById('yt')
-        const music = document.getElementById('music')
         
         let realCount = '...'
         const touch = 'ontouchstart' in window
 
         const playlist = 'PLFeE4sLplXslCiSt5KUCyT0Da73CkbxFM'
         const useyt = !touch && Math.random() < 0.6
-        const mp3 = ''
 
         let ytplayer = null
         
@@ -272,6 +279,13 @@
         function ensurebg() {
             if (!bg) return
             if (!bg.getAttribute('src')) bg.setAttribute('src', 'https://r2.guns.lol/290fd5f4-68d2-4608-b8db-ae8cac1cecfd.mp4')
+        }
+
+        function unloadbg() {
+            if (!bg) return
+            try { bg.pause() } catch {}
+            bg.removeAttribute('src')
+            try { bg.load() } catch {}
         }
 
         function fadevolume(set, from, to, ms) {
@@ -320,7 +334,13 @@
                             try {
                                 e.target.setVolume(0)
                                 try { e.target.setShuffle(true) } catch {}
-                                e.target.playVideo()
+                                try {
+                                    const pl = e.target.getPlaylist() || []
+                                    if (pl.length) e.target.playVideoAt(Math.floor(Math.random() * pl.length))
+                                    else e.target.playVideo()
+                                } catch {
+                                    e.target.playVideo()
+                                }
                                 fadevolume(v => e.target.setVolume(v), 0, 40, 700)
                             } catch {}
                         },
@@ -346,39 +366,44 @@
             enter.style.display = 'none'
 
             if (!touch) {
-                ensurebg()
-                bg.muted = true
-                bg.play().catch(() => {})
-
                 if (useyt) {
-                    if (music) {
-                        music.pause()
-                        music.removeAttribute('src')
-                        music.load()
+                    unloadbg()
+                    if (bg) {
+                        bg.style.opacity = '0'
+                        setTimeout(() => bg.style.display = 'none', 260)
                     }
+                    yt.style.opacity = '1'
                     startyt().then(ok => {
                         if (!ok) {
                             yt.style.opacity = '0'
+                            if (bg) {
+                                bg.style.display = 'block'
+                                bg.style.opacity = '1'
+                            }
                             bg.muted = false
-                            setTimeout(() => bg.volume = 0.25, 50)
-                            bg.play().catch(() => {})
+                            bg.volume = 0
+                            ensurebg()
+                            bg.play().then(() => fadevolume(v => bg.volume = v, 0, 0.4, 700)).catch(() => {})
                         } else {
-                            bg.muted = true
+                            if (bg) {
+                                bg.muted = true
+                                bg.style.display = 'none'
+                            }
                         }
                     })
                 } else {
                     yt.style.opacity = '0'
-                    if (music && mp3) {
-                        music.src = mp3
-                        music.loop = true
-                        music.volume = 0
-                        music.play().then(() => {
-                            fadevolume(v => music.volume = v, 0, 0.4, 700)
-                        }).catch(() => {})
+                    if (ytplayer) {
+                        try { ytplayer.stopVideo() } catch {}
+                        try { ytplayer.destroy() } catch {}
+                        ytplayer = null
                     }
+                    if (bg) bg.style.display = 'block'
+                    ensurebg()
                     bg.muted = false
-                    setTimeout(() => bg.volume = 0.25, 50)
-                    bg.play().catch(() => {})
+                    bg.volume = 0
+                    bg.play().then(() => fadevolume(v => bg.volume = v, 0, 0.4, 700)).catch(() => {})
+                    if (bg) bg.style.opacity = '1'
                 }
             }
 
